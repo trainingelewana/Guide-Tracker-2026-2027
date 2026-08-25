@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>EC Guide Tracker · Elewana Collection</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
@@ -31,10 +31,10 @@
   --shadow:     0 2px 12px rgba(46,43,40,0.08);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans','Helvetica Neue',sans-serif;background:var(--mist);color:var(--earth);min-height:100vh;font-size:13px;line-height:1.5}
+body{font-family:'DM Sans','Helvetica Neue',sans-serif;background:var(--mist);color:var(--earth);min-height:100vh;font-size:13px;line-height:1.5;overflow-x:hidden}
 
 /* ── Header ── */
-.site-header{background:var(--dusk);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.site-header{background:var(--dusk);padding:0 max(28px, env(safe-area-inset-right)) 0 max(28px, env(safe-area-inset-left));display:flex;align-items:center;justify-content:space-between;min-height:58px;flex-wrap:wrap;gap:4px 10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .brand{display:flex;align-items:center;gap:12px}
 .brand-icon{width:32px;height:32px;background:var(--gold);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:18px}
 .brand-text strong{font-size:16px;letter-spacing:.05em;font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;color:#fff}
@@ -44,8 +44,9 @@ body{font-family:'DM Sans','Helvetica Neue',sans-serif;background:var(--mist);co
 .csv-notice:hover{background:var(--gold);color:#1C1A17}
 
 /* ── Nav ── */
-.nav-bar{background:var(--dusk);border-top:1px solid rgba(255,255,255,.1);padding:0 28px;display:flex;gap:0;overflow-x:auto}
-.nav-tab{padding:10px 18px;color:rgba(255,255,255,.6);cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;border-bottom:3px solid transparent;transition:all .15s;white-space:nowrap;user-select:none}
+.nav-bar{background:var(--dusk);border-top:1px solid rgba(255,255,255,.1);padding:0 max(28px, env(safe-area-inset-right)) 0 max(28px, env(safe-area-inset-left));display:flex;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.nav-bar::-webkit-scrollbar{display:none}
+.nav-tab{padding:12px 18px;min-height:44px;box-sizing:border-box;display:flex;align-items:center;color:rgba(255,255,255,.6);cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;border-bottom:3px solid transparent;transition:all .15s;white-space:nowrap;user-select:none;-webkit-tap-highlight-color:transparent}
 .nav-tab:hover{color:rgba(255,255,255,.9)}
 .nav-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 
@@ -58,7 +59,7 @@ body{font-family:'DM Sans','Helvetica Neue',sans-serif;background:var(--mist);co
 .source-bar{background:var(--canvas);border:1px solid var(--smoke);border-left:3px solid var(--gold);border-radius:var(--radius);padding:10px 16px;margin-bottom:18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .source-bar p{font-size:11px;color:var(--ash);flex:1;min-width:200px}
 .source-bar strong{color:var(--earth)}
-.btn{background:var(--gold);color:#1C1A17;border:none;border-radius:var(--radius);padding:7px 16px;font-size:12px;font-weight:600;cursor:pointer;transition:background .15s;white-space:nowrap}
+.btn{background:var(--gold);color:#1C1A17;border:none;border-radius:var(--radius);padding:10px 18px;min-height:40px;box-sizing:border-box;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s;white-space:nowrap;-webkit-tap-highlight-color:transparent}
 .btn:hover{background:var(--gold-light)}
 .btn.ghost{background:var(--lgrey);color:var(--earth);border:1px solid var(--smoke)}
 .btn.ghost:hover{background:var(--smoke)}
@@ -83,7 +84,7 @@ body{font-family:'DM Sans','Helvetica Neue',sans-serif;background:var(--mist);co
 .card-lbl{font-size:10px;color:var(--ash);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
 
 /* ── Table ── */
-.tbl-wrap{background:var(--canvas);border-radius:var(--radius);box-shadow:var(--shadow);overflow:auto;margin-bottom:20px;max-height:70vh;
+.tbl-wrap{background:var(--canvas);border-radius:var(--radius);box-shadow:var(--shadow);overflow:auto;-webkit-overflow-scrolling:touch;margin-bottom:20px;max-height:70vh;
   scrollbar-width:auto;scrollbar-color:var(--gold) var(--lgrey)}
 .tbl-wrap::-webkit-scrollbar{width:13px;height:13px}
 .tbl-wrap::-webkit-scrollbar-track{background:var(--lgrey)}
@@ -139,6 +140,61 @@ tbody td.ctr{text-align:center}
   #mx-table th:nth-child(1),#mx-table td:nth-child(1){min-width:100px;max-width:100px}
   #mx-table th:nth-child(2),#mx-table td:nth-child(2){left:100px;box-shadow:2px 0 4px rgba(0,0,0,.08)}
 }
+
+/* ── Frozen leading columns: other data tables (mirrors eq/mx pattern above) ──
+   Each rule freezes the identifying column(s) so they stay visible while scrolling right. */
+#ob-task-table th:nth-child(1),#ob-task-table td:nth-child(1){position:sticky;left:0;z-index:2;min-width:30px;max-width:30px;background:var(--canvas)}
+#ob-task-table th:nth-child(2),#ob-task-table td:nth-child(2){position:sticky;left:30px;z-index:2;min-width:170px;max-width:170px;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
+#ob-task-table thead th:nth-child(-n+2){z-index:4;background:var(--dusk)}
+#ob-task-table tbody tr:nth-child(even) td:nth-child(-n+2){background:var(--mist)}
+
+#lb-table th:nth-child(1),#lb-table td:nth-child(1){position:sticky;left:0;z-index:2;min-width:45px;max-width:45px;background:var(--canvas)}
+#lb-table th:nth-child(2),#lb-table td:nth-child(2){position:sticky;left:45px;z-index:2;min-width:140px;max-width:140px;background:var(--canvas)}
+#lb-table th:nth-child(3),#lb-table td:nth-child(3){position:sticky;left:185px;z-index:2;min-width:110px;max-width:110px;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
+#lb-table thead th:nth-child(-n+3){z-index:4;background:var(--dusk)}
+#lb-table tbody tr:nth-child(even) td:nth-child(-n+3){background:var(--mist)}
+
+#pdp-table th:nth-child(1),#pdp-table td:nth-child(1){position:sticky;left:0;z-index:2;min-width:130px;max-width:130px;background:var(--canvas)}
+#pdp-table th:nth-child(2),#pdp-table td:nth-child(2){position:sticky;left:130px;z-index:2;min-width:90px;max-width:90px;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
+#pdp-table thead th:nth-child(-n+2){z-index:4;background:var(--dusk)}
+#pdp-table tbody tr:nth-child(even) td:nth-child(-n+2){background:var(--mist)}
+
+#fam-table th:nth-child(1),#fam-table td:nth-child(1){position:sticky;left:0;z-index:2;min-width:130px;max-width:130px;background:var(--canvas)}
+#fam-table th:nth-child(2),#fam-table td:nth-child(2){position:sticky;left:130px;z-index:2;min-width:55px;max-width:55px;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
+#fam-table thead th:nth-child(-n+2){z-index:4;background:var(--dusk)}
+#fam-table tbody tr:nth-child(even) td:nth-child(-n+2){background:var(--mist)}
+
+#tr-guide-table th:nth-child(1),#tr-guide-table td:nth-child(1){position:sticky;left:0;z-index:2;min-width:130px;max-width:130px;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
+#tr-guide-table thead th:nth-child(1){z-index:4;background:var(--dusk)}
+#tr-guide-table tbody tr:nth-child(even) td:nth-child(1){background:var(--mist)}
+
+#tr-prop-table th:nth-child(1),#tr-prop-table td:nth-child(1){position:sticky;left:0;z-index:2;min-width:130px;max-width:130px;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
+#tr-prop-table thead th:nth-child(1){z-index:4;background:var(--dusk)}
+#tr-prop-table tbody tr:nth-child(even) td:nth-child(1){background:var(--mist)}
+
+#sopref-table th:nth-child(1),#sopref-table td:nth-child(1){position:sticky;left:0;z-index:2;min-width:90px;max-width:90px;background:var(--canvas)}
+#sopref-table th:nth-child(2),#sopref-table td:nth-child(2){position:sticky;left:90px;z-index:2;min-width:180px;max-width:180px;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
+#sopref-table thead th:nth-child(-n+2){z-index:4;background:var(--dusk)}
+#sopref-table tbody tr:nth-child(even) td:nth-child(-n+2){background:var(--mist)}
+
+@media(max-width:700px){
+  #ob-task-table th:nth-child(2),#ob-task-table td:nth-child(2){min-width:110px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  #lb-table th:nth-child(3),#lb-table td:nth-child(3){position:static;box-shadow:none}
+  #lb-table th:nth-child(2),#lb-table td:nth-child(2){min-width:100px;max-width:100px;box-shadow:2px 0 4px rgba(0,0,0,.08)}
+
+  #pdp-table th:nth-child(2),#pdp-table td:nth-child(2){position:static;box-shadow:none}
+  #pdp-table th:nth-child(1),#pdp-table td:nth-child(1){min-width:110px;max-width:110px;box-shadow:2px 0 4px rgba(0,0,0,.08)}
+
+  #fam-table th:nth-child(2),#fam-table td:nth-child(2){position:static;box-shadow:none}
+  #fam-table th:nth-child(1),#fam-table td:nth-child(1){min-width:110px;max-width:110px;box-shadow:2px 0 4px rgba(0,0,0,.08)}
+
+  #tr-guide-table th:nth-child(1),#tr-guide-table td:nth-child(1){min-width:110px;max-width:110px}
+  #tr-prop-table th:nth-child(1),#tr-prop-table td:nth-child(1){min-width:110px;max-width:110px}
+
+  #sopref-table th:nth-child(2),#sopref-table td:nth-child(2){position:static;box-shadow:none}
+  #sopref-table th:nth-child(1),#sopref-table td:nth-child(1){min-width:75px;max-width:75px;box-shadow:2px 0 4px rgba(0,0,0,.08)}
+}
 .phase-hdr{cursor:pointer;user-select:none}
 .phase-hdr td{background:var(--gold-dim);border-left:3px solid var(--gold);padding:9px 12px;font-weight:700;color:var(--earth)}
 .phase-hdr:hover td{background:var(--gold-light)}
@@ -193,7 +249,7 @@ tbody td.ctr{text-align:center}
 
 /* ── Filter bar ── */
 .filter-bar{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
-.filter-bar select,.filter-bar input{border:1px solid var(--smoke);border-radius:var(--radius);padding:6px 10px;font-size:12px;background:var(--canvas);color:var(--earth);outline:none;font-family:'DM Sans',sans-serif}
+.filter-bar select,.filter-bar input{border:1px solid var(--smoke);border-radius:var(--radius);padding:8px 10px;min-height:38px;box-sizing:border-box;font-size:13px;background:var(--canvas);color:var(--earth);outline:none;font-family:'DM Sans',sans-serif}
 .filter-bar select:focus,.filter-bar input:focus{border-color:var(--gold)}
 .filter-lbl{font-size:11px;color:var(--ash);font-weight:600}
 
@@ -225,7 +281,35 @@ tbody td.ctr{text-align:center}
 .cond-svc{color:var(--ash)}
 .cond-blank{color:var(--smoke)}
 
-@media(max-width:700px){.main{padding:12px 10px}.nav-tab{padding:8px 10px;font-size:10px}.cards{gap:8px}}
+@media(max-width:700px){.main{padding:12px 10px}.nav-tab{padding:12px 10px;font-size:10px}.cards{gap:8px}}
+
+/* ── Phone-width tuning (iPhone 16/17, Galaxy S24/S25 etc., ~360–430px) ── */
+@media(max-width:480px){
+  .site-header{padding-top:6px;padding-bottom:6px;justify-content:flex-start}
+  .brand{flex:1 1 auto;min-width:0}
+  .brand-text span{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .header-meta{flex:0 0 auto;font-size:10px;line-height:1.4;margin-left:auto}
+  .csv-notice{margin-left:0;padding:6px 10px;min-height:32px;display:inline-flex;align-items:center}
+
+  .main{padding:10px 8px;padding-left:max(8px, env(safe-area-inset-left));padding-right:max(8px, env(safe-area-inset-right))}
+  .section-hdr{flex-wrap:wrap;gap:6px}
+  .section-hdr h2{font-size:15px}
+
+  .cards{gap:6px}
+  .card{min-width:100px;padding:10px 12px}
+  .card-num{font-size:18px}
+
+  .filter-bar{gap:6px}
+  .filter-bar select,.filter-bar input{font-size:16px;flex:1 1 auto;min-width:120px} /* 16px stops iOS Safari zooming in on focus */
+
+  .btn{padding:10px 14px;font-size:12px}
+  .modal{padding:18px 16px;width:94%}
+  .modal-actions{flex-wrap:wrap}
+  .modal-actions .btn{flex:1 1 auto}
+
+  /* Bigger tap targets on the SOP Matrix's clickable status cells */
+  #mx-table td.mx-cell,#mx-table td.mx-na{min-width:34px;min-height:34px;padding:6px 4px;text-align:center}
+}
 </style>
 </head>
 <body>
@@ -289,7 +373,7 @@ tbody td.ctr{text-align:center}
     <input  id="ob-search" type="text" placeholder="Search tasks…" oninput="renderTasks()" style="min-width:160px">
   </div>
   <div class="tbl-wrap">
-    <table><thead><tr>
+    <table id="ob-task-table"><thead><tr>
       <th class="ctr">#</th><th>Task</th><th>Who</th>
       <th>Target</th><th class="ctr">Status</th><th>Category</th><th class="ctr">Priority</th><th>Owner</th>
     </tr></thead><tbody id="ob-tasks-tbody"></tbody></table>
@@ -318,7 +402,7 @@ tbody td.ctr{text-align:center}
     <input id="lb-search" type="text" placeholder="Search guide…" oninput="renderLeaderboard()" style="min-width:140px">
   </div>
   <div class="tbl-wrap">
-    <table><thead><tr>
+    <table id="lb-table"><thead><tr>
       <th class="ctr">Rank</th><th>Guide</th><th>Property</th>
       <th class="ctr">Safety A Avg</th><th class="ctr">Knowledge B Avg</th><th class="ctr">Guest Exp C Avg</th>
       <th class="ctr">Vehicle D Avg</th><th class="ctr">Profess. E Avg</th>
@@ -349,7 +433,7 @@ tbody td.ctr{text-align:center}
     <input id="pdp-search" type="text" placeholder="Search guide…" oninput="renderPDP()" style="min-width:140px">
   </div>
   <div class="tbl-wrap">
-    <table><thead><tr>
+    <table id="pdp-table"><thead><tr>
       <th>Guide</th><th>Property</th><th class="ctr">Latest Score</th><th>Weakest Domain</th>
       <th>Development Focus</th><th>Actions Planned</th><th>Target Date</th><th>Review Date</th>
       <th class="ctr">Status</th><th>Notes</th>
@@ -370,7 +454,7 @@ tbody td.ctr{text-align:center}
     <div class="card danger"><div class="card-num" id="fam-tbc">0</div>      <div class="card-lbl">⬜ TBC</div></div>
   </div>
   <div class="tbl-wrap">
-    <table><thead><tr>
+    <table id="fam-table"><thead><tr>
       <th>Property</th><th class="ctr">Code</th><th class="ctr">Country</th>
       <th>Conservation Area / Group</th><th>Proposed Dates</th><th class="ctr">Status</th>
       <th class="ctr">GM Notified</th><th class="ctr">Register</th><th class="ctr">Assessment</th>
@@ -419,14 +503,14 @@ tbody td.ctr{text-align:center}
   </div>
   <div class="section-hdr" style="margin-top:8px"><div><h2 style="font-size:15px">Guide-Level Recommendations</h2></div></div>
   <div class="tbl-wrap" style="margin-bottom:20px">
-    <table><thead><tr>
+    <table id="tr-guide-table"><thead><tr>
       <th>Guide</th><th>Property</th><th class="ctr">Overall</th>
       <th>Priority Training 2027</th><th>Advancement 2028</th><th class="ctr">Urgency</th>
     </tr></thead><tbody id="tr-guide-tbody"></tbody></table>
   </div>
   <div class="section-hdr"><div><h2 style="font-size:15px">Property Training Plan</h2></div></div>
   <div class="tbl-wrap">
-    <table><thead><tr>
+    <table id="tr-prop-table"><thead><tr>
       <th>Property</th><th class="ctr">Country</th>
       <th class="ctr">Avg A</th><th class="ctr">Avg B</th><th class="ctr">Avg C</th><th class="ctr">Avg D</th><th class="ctr">Avg E</th>
       <th>Weakest Domain</th><th>Priority 2027</th><th>Plan 2028</th>
@@ -507,7 +591,7 @@ tbody td.ctr{text-align:center}
     <input id="sopref-search" type="text" placeholder="Search SOP…" oninput="renderSOPRef()" style="min-width:160px">
   </div>
   <div class="tbl-wrap">
-    <table><thead><tr>
+    <table id="sopref-table"><thead><tr>
       <th>Code</th><th>SOP Title</th><th>Family</th><th>Applies To</th><th class="ctr">Review Freq.</th><th class="ctr">Status</th><th>Link</th>
     </tr></thead><tbody id="sopref-tbody"></tbody></table>
   </div>
