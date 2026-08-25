@@ -790,11 +790,11 @@ function renderFamTrips() {
     else if(f.status==='Planned')planned++;
     else tbc++;
     const stMap={'Confirmed':'confirmed','Planned':'planned','TBC':'tbc','Complete':'complete'};
-    if(f.country!==prevCtry){prevCtry=f.country;rows+=`<tr class="grp-hdr"><td colspan="10">${groups[f.country]||f.country} · ${[...new Set(famData.filter(fd=>fd.country===f.country).map(fd=>fd.group))].join(' · ')}</td></tr>`;}
+    if(f.country!==prevCtry){prevCtry=f.country;rows+=`<tr class="grp-hdr"><td colspan="10">${groups[f.country]||f.country} · ${[...new Set(fam.filter(fd=>fd.country===f.country).map(fd=>(PROPS.find(p=>p.code===fd.code)||{}).group).filter(Boolean))].join(' · ')}</td></tr>`;}
     rows+=`<tr class="${i%2?'alt':''}">
       <td><strong>${f.name}</strong>${f.note?`<br><span style="font-size:10px;color:var(--gold)">${f.note}</span>`:''}</td>
       <td class="ctr">${f.code}</td><td class="ctr">${f.country}</td>
-      <td style="font-size:11px;color:var(--ash)">${f.group}</td>
+      <td style="font-size:11px;color:var(--ash)">${(PROPS.find(p=>p.code===f.code)||{}).group||'—'}</td>
       <td style="white-space:nowrap;font-size:11px">${f.dates}</td>
       <td class="ctr">${pill(f.status,stMap[f.status]||'tbc')}</td>
       <td class="ctr" style="font-size:13px">${f.gm.includes('Yes')||f.gm==='✅'?'✅':'⬜'}</td>
@@ -942,11 +942,51 @@ function parseCSVText(text) {
   return rows;
 }
 
-async function fetchSheetTab(sheetId, tabName) {
-  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tabName)}`;
-  const resp = await fetch(url);
-  if (!resp.ok) throw new Error(`Could not read tab "${tabName}" — check the tab name and that the Sheet is shared as "Anyone with the link".`);
-  return parseCSVText(await resp.text());
+// Reads one tab from the Sheet using Google's visualization query endpoint
+// loaded via a <script> tag (JSONP), not a direct fetch(). This matters:
+// browsers block a plain fetch() to this endpoint from a different domain
+// like GitHub Pages (no CORS headers are sent back), so it was silently
+// failing every time and falling back to old data baked into this file —
+// which is exactly what was happening. A <script> tag isn't subject to
+// that restriction, which is why this is the standard, reliable way to
+// read a public Google Sheet from an external site.
+let _gvizCallbackCounter = 0;
+function fetchSheetTab(sheetId, tabName) {
+  return new Promise((resolve, reject) => {
+    const callbackName = '_gvizCb' + (_gvizCallbackCounter++);
+    const script = document.createElement('script');
+    const cleanup = () => { delete window[callbackName]; script.remove(); };
+    window[callbackName] = (resp) => {
+      cleanup();
+      if (!resp || resp.status === 'error') {
+        const msg = (resp && resp.errors && resp.errors[0] && resp.errors[0].detailed_message) || 'unknown error';
+        reject(new Error(`Could not read tab "${tabName}" (${msg}) — check the tab name and that the Sheet is shared as "Anyone with the link".`));
+        return;
+      }
+      resolve(gvizTableToRows(resp.table));
+    };
+    script.onerror = () => { cleanup(); reject(new Error(`Could not reach Google Sheets to read tab "${tabName}".`)); };
+    script.src = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?sheet=${encodeURIComponent(tabName)}&tqx=responseHandler:${callbackName}`;
+    document.body.appendChild(script);
+  });
+}
+
+// Converts gviz's {cols, rows} table shape into the same array-of-arrays
+// shape the rest of this file's parsing logic already expects (so none of
+// the column-index mapping below needs to change) — column A is always
+// index 0, matching a plain CSV read.
+function gvizTableToRows(table) {
+  if (!table || !table.rows) return [];
+  return table.rows.map(row =>
+    (row.c || []).map(cell => {
+      if (!cell) return '';
+      // Prefer the formatted display value (dates, percentages etc. come
+      // through as their visible text, same as a CSV export would show).
+      if (cell.f !== undefined && cell.f !== null) return String(cell.f);
+      if (cell.v === undefined || cell.v === null) return '';
+      return String(cell.v);
+    })
+  );
 }
 
 const CAT_MAP = [
