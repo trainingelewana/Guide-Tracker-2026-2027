@@ -83,7 +83,18 @@ body{font-family:'DM Sans','Helvetica Neue',sans-serif;background:var(--mist);co
 .card-lbl{font-size:10px;color:var(--ash);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
 
 /* ── Table ── */
-.tbl-wrap{background:var(--canvas);border-radius:var(--radius);box-shadow:var(--shadow);overflow:auto;margin-bottom:20px}
+.tbl-wrap{background:var(--canvas);border-radius:var(--radius);box-shadow:var(--shadow);overflow:auto;margin-bottom:20px;max-height:70vh;
+  scrollbar-width:auto;scrollbar-color:var(--gold) var(--lgrey)}
+.tbl-wrap::-webkit-scrollbar{width:13px;height:13px}
+.tbl-wrap::-webkit-scrollbar-track{background:var(--lgrey)}
+.tbl-wrap::-webkit-scrollbar-thumb{background:var(--gold);border-radius:7px;border:3px solid var(--lgrey)}
+.tbl-wrap::-webkit-scrollbar-thumb:hover{background:var(--gold-light)}
+.tbl-wrap::-webkit-scrollbar-corner{background:var(--lgrey)}
+@media(max-width:700px){
+  .tbl-wrap{max-height:60vh}
+  .tbl-wrap::-webkit-scrollbar{width:9px;height:9px}
+  .tbl-wrap::-webkit-scrollbar-thumb{border-width:2px}
+}
 table{border-collapse:collapse;width:100%;min-width:600px}
 thead th{background:var(--dusk);color:#fff;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;padding:9px 12px;text-align:left;white-space:nowrap;position:sticky;top:0}
 thead th.ctr{text-align:center}
