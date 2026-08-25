@@ -94,6 +94,40 @@ tbody td{padding:8px 12px;font-size:12px;vertical-align:middle}
 tbody td.ctr{text-align:center}
 .alt{background:var(--mist)}
 .grp-hdr td{background:var(--dusk);color:rgba(255,255,255,.65);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:5px 12px}
+
+/* ── Frozen / sticky columns: Equipment table ──
+   Column order after JS build: 1 Equipment Item · 2 Min Qty · 3 Unit · 4 Category · 5 SOP Refs · then per-property Qty/Condition pairs.
+   Desktop freezes all 5; mobile freezes only Item + Min Qty so 2-3 property columns stay visible while scrolling. */
+#eq-table th:nth-child(1),#eq-table td:nth-child(1){position:sticky;left:0;z-index:2;min-width:120px;max-width:120px;background:var(--canvas);white-space:normal}
+#eq-table th:nth-child(2),#eq-table td:nth-child(2){position:sticky;left:120px;z-index:2;min-width:55px;max-width:55px;background:var(--canvas)}
+#eq-table th:nth-child(3),#eq-table td:nth-child(3){position:sticky;left:175px;z-index:2;min-width:50px;max-width:50px;background:var(--canvas)}
+#eq-table th:nth-child(4),#eq-table td:nth-child(4){position:sticky;left:225px;z-index:2;min-width:80px;max-width:80px;background:var(--canvas)}
+#eq-table th:nth-child(5),#eq-table td:nth-child(5){position:sticky;left:305px;z-index:2;min-width:110px;max-width:110px;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
+#eq-table thead th:nth-child(-n+5){z-index:4;background:var(--dusk)}
+#eq-table tbody tr.alt td:nth-child(-n+5){background:var(--mist)}
+
+/* ── Frozen / sticky columns: SOP Training Matrix ──
+   Column order after JS build: 1 Guide · 2 % · 3 Property · 4 Type · then per-SOP status cells.
+   Desktop freezes all 4 (through %); mobile freezes only Guide + % so more SOP columns stay visible while scrolling. */
+#mx-table th:nth-child(1),#mx-table td:nth-child(1){position:sticky;left:0;z-index:2;min-width:140px;max-width:140px;background:var(--canvas)}
+#mx-table th:nth-child(2),#mx-table td:nth-child(2){position:sticky;left:140px;z-index:2;min-width:55px;max-width:55px;background:var(--canvas)}
+#mx-table th:nth-child(3),#mx-table td:nth-child(3){position:sticky;left:195px;z-index:2;min-width:70px;max-width:70px;background:var(--canvas)}
+#mx-table th:nth-child(4),#mx-table td:nth-child(4){position:sticky;left:265px;z-index:2;min-width:90px;max-width:90px;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
+#mx-table thead th:nth-child(-n+4){z-index:4;background:var(--dusk)}
+#mx-table tbody tr.alt td:nth-child(-n+4){background:var(--mist)}
+
+@media(max-width:700px){
+  #eq-table th:nth-child(3),#eq-table td:nth-child(3),
+  #eq-table th:nth-child(4),#eq-table td:nth-child(4),
+  #eq-table th:nth-child(5),#eq-table td:nth-child(5){position:static;box-shadow:none}
+  #eq-table th:nth-child(1),#eq-table td:nth-child(1){min-width:95px;max-width:95px}
+  #eq-table th:nth-child(2),#eq-table td:nth-child(2){left:95px;box-shadow:2px 0 4px rgba(0,0,0,.08)}
+
+  #mx-table th:nth-child(3),#mx-table td:nth-child(3),
+  #mx-table th:nth-child(4),#mx-table td:nth-child(4){position:static;box-shadow:none}
+  #mx-table th:nth-child(1),#mx-table td:nth-child(1){min-width:100px;max-width:100px}
+  #mx-table th:nth-child(2),#mx-table td:nth-child(2){left:100px;box-shadow:2px 0 4px rgba(0,0,0,.08)}
+}
 .phase-hdr{cursor:pointer;user-select:none}
 .phase-hdr td{background:var(--gold-dim);border-left:3px solid var(--gold);padding:9px 12px;font-weight:700;color:var(--earth)}
 .phase-hdr:hover td{background:var(--gold-light)}
@@ -275,8 +309,8 @@ tbody td.ctr{text-align:center}
   <div class="tbl-wrap">
     <table><thead><tr>
       <th class="ctr">Rank</th><th>Guide</th><th>Property</th>
-      <th class="ctr">Safety A</th><th class="ctr">Knowledge B</th><th class="ctr">Guest Exp C</th>
-      <th class="ctr">Vehicle D</th><th class="ctr">Profess. E</th>
+      <th class="ctr">Safety A Avg</th><th class="ctr">Knowledge B Avg</th><th class="ctr">Guest Exp C Avg</th>
+      <th class="ctr">Vehicle D Avg</th><th class="ctr">Profess. E Avg</th>
       <th>R1 Avg</th><th>R2 Avg</th><th>R3 Avg</th><th class="ctr">Trend</th>
       <th class="ctr">Rating</th><th class="ctr">Cert</th><th>Training Flag</th>
     </tr></thead><tbody id="lb-tbody"></tbody></table>
@@ -827,7 +861,7 @@ function renderEquipment() {
 
   // Build header
   document.getElementById('eq-thead').innerHTML = `<tr>
-    <th>Category</th><th>Equipment Item</th><th>Unit</th><th>SOP Refs</th><th>Min Qty</th>
+    <th>Equipment Item</th><th class="ctr">Min Qty</th><th class="ctr">Unit</th><th>Category</th><th>SOP Refs</th>
     ${propsToShow.map(p=>`<th class="ctr" colspan="2" style="background:var(--dusk)">${p.code}<br><span style="font-size:9px;opacity:.7">${p.country}</span></th>`).join('')}
   </tr><tr>
     <th></th><th></th><th></th><th></th><th></th>
@@ -847,11 +881,11 @@ function renderEquipment() {
       rows+=`<tr class="grp-hdr"><td colspan="${5+propsToShow.length*2}">${e.cat.toUpperCase()}</td></tr>`;
     }
     rows+=`<tr class="${i%2?'alt':''}">
-      <td style="font-size:11px;color:var(--ash)">${e.cat}</td>
       <td><strong style="font-size:12px">${e.item}</strong></td>
-      <td class="ctr" style="font-size:11px">${e.unit}</td>
-      <td style="font-size:10px;color:var(--ash);max-width:160px">${e.sops}</td>
       <td class="ctr" style="font-size:11px;font-weight:700">${e.min_qty}</td>
+      <td class="ctr" style="font-size:11px">${e.unit}</td>
+      <td style="font-size:11px;color:var(--ash)">${e.cat}</td>
+      <td style="font-size:10px;color:var(--ash);max-width:160px">${e.sops}</td>
       ${propsToShow.map(p=>`
         <td class="ctr" style="font-size:12px;font-weight:700">${e.props[p.code]?.qty||'—'}</td>
         <td class="ctr" style="font-size:11px">${condCell(e.props[p.code]?.cond||'')}</td>`).join('')}
@@ -1412,16 +1446,15 @@ function renderMatrix() {
   visSOPs.forEach(([c,t,f]) => { if(!famGroups[f]) famGroups[f]=[]; famGroups[f].push([c,t,f]); });
 
   let thead = '<tr>';
-  thead += '<th style="position:sticky;left:0;z-index:3;background:var(--dusk);min-width:140px">Guide</th>';
-  thead += '<th style="position:sticky;left:0;background:var(--dusk);white-space:nowrap">Property</th>';
-  thead += '<th style="position:sticky;left:0;background:var(--dusk)">Type</th>';
-  thead += '<th style="position:sticky;left:0;background:var(--dusk);text-align:center">%</th>';
+  thead += '<th>Guide</th>';
+  thead += '<th class="ctr">%</th>';
+  thead += '<th style="white-space:nowrap">Property</th>';
+  thead += '<th>Type</th>';
   Object.entries(famGroups).forEach(([fam, sops]) => {
     thead += `<th colspan="${sops.length}" class="mx-fam-hdr" style="background:${FAM_COLORS[fam]}">${fam} (${sops.length})</th>`;
   });
   thead += '</tr><tr>';
-  thead += '<th style="position:sticky;left:0;z-index:3;background:var(--dusk)"></th>';
-  thead += '<th style="background:var(--dusk)"></th><th style="background:var(--dusk)"></th><th style="background:var(--dusk)"></th>';
+  thead += '<th></th><th></th><th></th><th></th>';
   visSOPs.forEach(([code,title,fam]) => {
     thead += `<th class="mx-sop-hdr" style="background:${FAM_COLORS[fam]}" title="${title}">${code}</th>`;
   });
@@ -1446,12 +1479,12 @@ function renderMatrix() {
 
     tbody += `<tr class="${idx%2?'alt':''}">
       <td class="mx-name-cell">${g.name}<br><span style="font-size:9px;color:var(--ash);font-weight:400">${g.role}</span></td>
-      <td class="mx-prop-cell">${g.prop}</td>
-      <td style="font-size:10px;white-space:nowrap;color:var(--ash)">${g.type}</td>
       <td class="mx-pct-cell" style="color:${pctCol}">
         <div style="font-size:13px;font-weight:800">${pct}%</div>
         <div style="font-size:9px;color:var(--ash)">${trained}/${applicable}</div>
-      </td>`;
+      </td>
+      <td class="mx-prop-cell">${g.prop}</td>
+      <td style="font-size:10px;white-space:nowrap;color:var(--ash)">${g.type}</td>`;
 
     visSOPs.forEach(([code,title,fam]) => {
       const def = g.sop_status[code];
