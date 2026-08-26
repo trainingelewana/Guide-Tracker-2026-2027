@@ -103,12 +103,12 @@ body{font-family:'DM Sans','Helvetica Neue',sans-serif;background:var(--mist);co
 }
 table{border-collapse:collapse;width:100%;min-width:600px}
 #eq-table{table-layout:fixed;width:auto}
-thead th{background:var(--dusk);color:#fff;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;padding:9px 12px;text-align:left;white-space:nowrap;position:sticky;top:0;z-index:3}
+thead th{background:var(--dusk);color:#fff;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;padding:9px 12px;text-align:left;white-space:nowrap;position:sticky;top:0;z-index:3;overflow:hidden;text-overflow:ellipsis}
 thead th.ctr{text-align:center}
 tbody tr{border-bottom:1px solid var(--smoke)}
 tbody tr:last-child{border-bottom:none}
 tbody tr:hover{background:var(--amber-w)}
-tbody td{padding:8px 12px;font-size:12px;vertical-align:middle}
+tbody td{padding:8px 12px;font-size:12px;vertical-align:middle;overflow:hidden}
 tbody td.ctr{text-align:center}
 .alt{background:var(--mist)}
 .grp-hdr td{background:var(--dusk);color:rgba(255,255,255,.65);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:5px 12px}
@@ -277,11 +277,18 @@ tbody td.ctr{text-align:center}
 .phase-row-hidden{display:none}
 
 /* ── Score bar ── */
-.score-wrap{display:flex;align-items:center;gap:7px}
+.score-wrap{display:flex;align-items:center;gap:7px;min-width:0}
 .score-bar{flex:1;height:5px;background:var(--smoke);border-radius:3px;overflow:hidden;min-width:50px}
 .score-fill{height:100%;border-radius:3px}
 .score-val{font-weight:700;font-size:12px;min-width:26px;text-align:right}
-
+@media(max-width:700px){
+  /* The bar's minimum footprint (~83px) is wider than several score columns on phone widths.
+     Rather than keep shrinking columns to fit a bar that will never look good that narrow,
+     just show the number — it's what people actually read at a glance anyway. */
+  .score-bar{display:none}
+  .score-wrap{gap:0;justify-content:center}
+  .score-val{min-width:0;text-align:center}
+}
 /* ── Pills ── */
 .pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
 .pill-exemplary{background:#D4EDDA;color:#155724}
