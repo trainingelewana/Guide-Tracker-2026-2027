@@ -180,14 +180,14 @@ tbody td.ctr{text-align:center}
    All widths now come from each table's <colgroup> under table-layout:fixed, which
    guarantees identical column widths across every row — eliminating the class of bug
    where a frozen column's assumed width drifted from its real rendered width. */
-#ob-task-table{table-layout:fixed;width:auto}
+#ob-task-table{table-layout:fixed;width:100%;min-width:770px}
 .ob-c1{width:30px} .ob-c2{width:170px} .ob-c3{width:90px} .ob-c4{width:100px} .ob-c5{width:90px} .ob-c6{width:110px} .ob-c7{width:80px} .ob-c8{width:100px}
 #ob-task-table th:nth-child(1),#ob-task-table td:nth-child(1){position:sticky;left:0;z-index:2;background:var(--canvas)}
 #ob-task-table th:nth-child(2),#ob-task-table td:nth-child(2){position:sticky;left:30px;z-index:2;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
 #ob-task-table thead th:nth-child(-n+2){z-index:4;background:var(--dusk)}
 #ob-task-table tbody tr:nth-child(even) td:nth-child(-n+2){background:var(--mist)}
 
-#lb-table{table-layout:fixed;width:auto}
+#lb-table{table-layout:fixed;width:100%;min-width:1230px}
 .lb-c1{width:45px} .lb-c2{width:140px} .lb-c3{width:110px} .lb-c4{width:80px} .lb-c5{width:90px} .lb-c6{width:90px} .lb-c7{width:80px} .lb-c8{width:80px} .lb-c9{width:70px} .lb-c10{width:70px} .lb-c11{width:70px} .lb-c12{width:60px} .lb-c13{width:80px} .lb-c14{width:55px} .lb-c15{width:110px}
 #lb-table th:nth-child(1),#lb-table td:nth-child(1){position:sticky;left:0;z-index:2;background:var(--canvas)}
 #lb-table th:nth-child(2),#lb-table td:nth-child(2){position:sticky;left:45px;z-index:2;background:var(--canvas)}
@@ -195,33 +195,33 @@ tbody td.ctr{text-align:center}
 #lb-table thead th:nth-child(-n+3){z-index:4;background:var(--dusk)}
 #lb-table tbody tr:nth-child(even) td:nth-child(-n+3){background:var(--mist)}
 
-#pdp-table{table-layout:fixed;width:auto}
+#pdp-table{table-layout:fixed;width:100%;min-width:1180px}
 .pdp-c1{width:130px} .pdp-c2{width:90px} .pdp-c3{width:80px} .pdp-c4{width:130px} .pdp-c5{width:160px} .pdp-c6{width:160px} .pdp-c7{width:90px} .pdp-c8{width:90px} .pdp-c9{width:90px} .pdp-c10{width:160px}
 #pdp-table th:nth-child(1),#pdp-table td:nth-child(1){position:sticky;left:0;z-index:2;background:var(--canvas)}
 #pdp-table th:nth-child(2),#pdp-table td:nth-child(2){position:sticky;left:130px;z-index:2;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
 #pdp-table thead th:nth-child(-n+2){z-index:4;background:var(--dusk)}
 #pdp-table tbody tr:nth-child(even) td:nth-child(-n+2){background:var(--mist)}
 
-#fam-table{table-layout:fixed;width:auto}
+#fam-table{table-layout:fixed;width:100%;min-width:1015px}
 .fam-c1{width:130px} .fam-c2{width:55px} .fam-c3{width:70px} .fam-c4{width:150px} .fam-c5{width:100px} .fam-c6{width:90px} .fam-c7{width:90px} .fam-c8{width:70px} .fam-c9{width:80px} .fam-c10{width:180px}
 #fam-table th:nth-child(1),#fam-table td:nth-child(1){position:sticky;left:0;z-index:2;background:var(--canvas)}
 #fam-table th:nth-child(2),#fam-table td:nth-child(2){position:sticky;left:130px;z-index:2;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
 #fam-table thead th:nth-child(-n+2){z-index:4;background:var(--dusk)}
 #fam-table tbody tr:nth-child(even) td:nth-child(-n+2){background:var(--mist)}
 
-#tr-guide-table{table-layout:fixed;width:auto}
+#tr-guide-table{table-layout:fixed;width:100%;min-width:770px}
 .trg-c1{width:130px} .trg-c2{width:90px} .trg-c3{width:70px} .trg-c4{width:200px} .trg-c5{width:200px} .trg-c6{width:80px}
 #tr-guide-table th:nth-child(1),#tr-guide-table td:nth-child(1){position:sticky;left:0;z-index:2;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
 #tr-guide-table thead th:nth-child(1){z-index:4;background:var(--dusk)}
 #tr-guide-table tbody tr:nth-child(even) td:nth-child(1){background:var(--mist)}
 
-#tr-prop-table{table-layout:fixed;width:auto}
+#tr-prop-table{table-layout:fixed;width:100%;min-width:930px}
 .trp-c1{width:130px} .trp-c2{width:70px} .trp-c3{width:60px} .trp-c4{width:60px} .trp-c5{width:60px} .trp-c6{width:60px} .trp-c7{width:60px} .trp-c8{width:130px} .trp-c9{width:180px} .trp-c10{width:180px}
 #tr-prop-table th:nth-child(1),#tr-prop-table td:nth-child(1){position:sticky;left:0;z-index:2;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
 #tr-prop-table thead th:nth-child(1){z-index:4;background:var(--dusk)}
 #tr-prop-table tbody tr:nth-child(even) td:nth-child(1){background:var(--mist)}
 
-#sopref-table{table-layout:fixed;width:auto}
+#sopref-table{table-layout:fixed;width:100%;min-width:875px}
 .sr-c1{width:115px} .sr-c2{width:220px} .sr-c3{width:110px} .sr-c4{width:150px} .sr-c5{width:90px} .sr-c6{width:110px} .sr-c7{width:80px}
 #sopref-table th:nth-child(1),#sopref-table td:nth-child(1){position:sticky;left:0;z-index:2;background:var(--canvas);white-space:normal;overflow-wrap:break-word}
 #sopref-table th:nth-child(2),#sopref-table td:nth-child(2){position:sticky;left:115px;z-index:2;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08);white-space:normal}
@@ -229,27 +229,34 @@ tbody td.ctr{text-align:center}
 #sopref-table tbody tr:nth-child(even) td:nth-child(-n+2){background:var(--mist)}
 
 @media(max-width:700px){
+  #ob-task-table{min-width:710px}
   .ob-c2{width:110px}
   #ob-task-table th:nth-child(2),#ob-task-table td:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
+  #lb-table{min-width:1190px}
   #lb-table td:nth-child(3){position:static}
   #lb-table th:nth-child(3){left:auto;box-shadow:none}
   .lb-c2{width:100px}
   #lb-table th:nth-child(2),#lb-table td:nth-child(2){box-shadow:2px 0 4px rgba(0,0,0,.08)}
 
+  #pdp-table{min-width:1160px}
   #pdp-table td:nth-child(2){position:static}
   #pdp-table th:nth-child(2){left:auto;box-shadow:none}
   .pdp-c1{width:110px}
   #pdp-table th:nth-child(1),#pdp-table td:nth-child(1){box-shadow:2px 0 4px rgba(0,0,0,.08)}
 
+  #fam-table{min-width:995px}
   #fam-table td:nth-child(2){position:static}
   #fam-table th:nth-child(2){left:auto;box-shadow:none}
   .fam-c1{width:110px}
   #fam-table th:nth-child(1),#fam-table td:nth-child(1){box-shadow:2px 0 4px rgba(0,0,0,.08)}
 
+  #tr-guide-table{min-width:750px}
   .trg-c1{width:110px}
+  #tr-prop-table{min-width:910px}
   .trp-c1{width:110px}
 
+  #sopref-table{min-width:855px}
   #sopref-table td:nth-child(2){position:static}
   #sopref-table th:nth-child(2){left:auto;box-shadow:none}
   #sopref-table th:nth-child(1),#sopref-table td:nth-child(1){box-shadow:2px 0 4px rgba(0,0,0,.08)}
