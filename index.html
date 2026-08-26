@@ -49,6 +49,11 @@ body{font-family:'DM Sans','Helvetica Neue',sans-serif;background:var(--mist);co
 .nav-tab{padding:12px 18px;min-height:44px;box-sizing:border-box;display:flex;align-items:center;color:rgba(255,255,255,.6);cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;border-bottom:3px solid transparent;transition:all .15s;white-space:nowrap;user-select:none;-webkit-tap-highlight-color:transparent}
 .nav-tab:hover{color:rgba(255,255,255,.9)}
 .nav-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.nav-bar-wrap{position:relative}
+.nav-fade{position:absolute;top:0;bottom:0;width:34px;display:flex;align-items:center;font-size:18px;font-weight:700;color:#fff;pointer-events:none;opacity:0;transition:opacity .2s;z-index:5}
+.nav-fade-l{left:0;background:linear-gradient(to right,var(--dusk) 45%,rgba(28,26,23,0));justify-content:flex-start;padding-left:4px}
+.nav-fade-r{right:0;background:linear-gradient(to left,var(--dusk) 45%,rgba(28,26,23,0));justify-content:flex-end;padding-right:4px}
+.nav-fade.show{opacity:1}
 
 /* ── Main ── */
 .main{padding:20px 28px;max-width:1600px;margin:0 auto}
@@ -339,7 +344,8 @@ tbody td.ctr{text-align:center}
   </div>
 </header>
 
-<nav class="nav-bar">
+<div class="nav-bar-wrap">
+<nav class="nav-bar" id="nav-bar">
   <div class="nav-tab active"   onclick="switchTab('onboarding')">📋 Onboarding</div>
   <div class="nav-tab"          onclick="switchTab('leaderboard')">🏆 Leaderboard</div>
   <div class="nav-tab"          onclick="switchTab('pdp')">📈 PDP Tracker</div>
@@ -349,6 +355,9 @@ tbody td.ctr{text-align:center}
   <div class="nav-tab"          onclick="switchTab('sopmatrix')">📋 SOP Training Matrix</div>
   <div class="nav-tab"          onclick="switchTab('sopref')">📑 SOP Reference</div>
 </nav>
+<div class="nav-fade nav-fade-l" id="nav-fade-l">‹</div>
+<div class="nav-fade nav-fade-r" id="nav-fade-r">›</div>
+</div>
 
 <main class="main">
 
@@ -729,7 +738,11 @@ function switchTab(name){
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   const tabs=['onboarding','leaderboard','pdp','famtrips','equipment','training','sopmatrix','sopref'];
-  document.querySelectorAll('.nav-tab')[tabs.indexOf(name)].classList.add('active');
+  const activeTabEl = document.querySelectorAll('.nav-tab')[tabs.indexOf(name)];
+  activeTabEl.classList.add('active');
+  if (typeof activeTabEl.scrollIntoView === 'function') {
+    try { activeTabEl.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'}); } catch(e) {}
+  }
   // Sticky-header stacking and frozen-column widths are both measured from the rendered DOM.
   // Measuring while a tab is display:none always returns 0, so recompute now that the tab
   // just became visible — a render that happened earlier while hidden got it wrong.
@@ -1102,6 +1115,26 @@ window.addEventListener('resize', () => {
   stackStickyHeaderRows('mx-table');
   clearTimeout(_resizeTimer);
   _resizeTimer = setTimeout(alignAllFrozenTables, 150);
+  updateNavFade();
+});
+
+// The tab bar scrolls horizontally on narrow screens with no visible scrollbar (by design,
+// to look clean) — which means there's no hint that more tabs exist off-screen. These fades
+// show/hide on each edge depending on whether there's actually more to scroll in that
+// direction, so a phone user can tell at a glance that swiping reveals more tabs.
+function updateNavFade() {
+  const bar = document.getElementById('nav-bar');
+  const fadeL = document.getElementById('nav-fade-l');
+  const fadeR = document.getElementById('nav-fade-r');
+  if (!bar || !fadeL || !fadeR) return;
+  const maxScroll = bar.scrollWidth - bar.clientWidth;
+  fadeL.classList.toggle('show', bar.scrollLeft > 4);
+  fadeR.classList.toggle('show', bar.scrollLeft < maxScroll - 4);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const bar = document.getElementById('nav-bar');
+  if (bar) bar.addEventListener('scroll', updateNavFade);
+  updateNavFade();
 });
 
 // ── TAB 5: Training Recs ─────────────────────────────────────────
