@@ -97,7 +97,7 @@ body{font-family:'DM Sans','Helvetica Neue',sans-serif;background:var(--mist);co
   .tbl-wrap::-webkit-scrollbar-thumb{border-width:2px}
 }
 table{border-collapse:collapse;width:100%;min-width:600px}
-thead th{background:var(--dusk);color:#fff;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;padding:9px 12px;text-align:left;white-space:nowrap;position:sticky;top:0}
+thead th{background:var(--dusk);color:#fff;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;padding:9px 12px;text-align:left;white-space:nowrap;position:sticky;top:0;z-index:3}
 thead th.ctr{text-align:center}
 tbody tr{border-bottom:1px solid var(--smoke)}
 tbody tr:last-child{border-bottom:none}
@@ -129,15 +129,12 @@ tbody td.ctr{text-align:center}
 #mx-table tbody tr.alt td:nth-child(-n+4){background:var(--mist)}
 
 @media(max-width:700px){
-  #eq-table td:nth-child(3),
-  #eq-table td:nth-child(4),
   #eq-table td:nth-child(5){position:static}
-  #eq-table th:nth-child(3),
-  #eq-table th:nth-child(4),
   #eq-table th:nth-child(5){left:auto;box-shadow:none}
-  #eq-table th:nth-child(5),#eq-table td:nth-child(5){box-shadow:none}
-  #eq-table th:nth-child(1),#eq-table td:nth-child(1){min-width:95px;max-width:95px}
-  #eq-table th:nth-child(2),#eq-table td:nth-child(2){left:95px;box-shadow:2px 0 4px rgba(0,0,0,.08)}
+  #eq-table th:nth-child(1),#eq-table td:nth-child(1){min-width:85px;max-width:85px}
+  #eq-table th:nth-child(2),#eq-table td:nth-child(2){left:85px;min-width:38px;max-width:38px}
+  #eq-table th:nth-child(3),#eq-table td:nth-child(3){left:123px;min-width:35px;max-width:35px}
+  #eq-table th:nth-child(4),#eq-table td:nth-child(4){left:158px;min-width:62px;max-width:62px;box-shadow:2px 0 4px rgba(0,0,0,.08)}
 
   #mx-table td:nth-child(3),
   #mx-table td:nth-child(4){position:static}
@@ -178,8 +175,8 @@ tbody td.ctr{text-align:center}
 #tr-prop-table thead th:nth-child(1){z-index:4;background:var(--dusk)}
 #tr-prop-table tbody tr:nth-child(even) td:nth-child(1){background:var(--mist)}
 
-#sopref-table th:nth-child(1),#sopref-table td:nth-child(1){position:sticky;left:0;z-index:2;min-width:90px;max-width:90px;background:var(--canvas)}
-#sopref-table th:nth-child(2),#sopref-table td:nth-child(2){position:sticky;left:90px;z-index:2;min-width:180px;max-width:180px;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
+#sopref-table th:nth-child(1),#sopref-table td:nth-child(1){position:sticky;left:0;z-index:2;min-width:115px;max-width:115px;background:var(--canvas);white-space:normal;overflow-wrap:break-word}
+#sopref-table th:nth-child(2),#sopref-table td:nth-child(2){position:sticky;left:115px;z-index:2;min-width:180px;max-width:180px;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
 #sopref-table thead th:nth-child(-n+2){z-index:4;background:var(--dusk)}
 #sopref-table tbody tr:nth-child(even) td:nth-child(-n+2){background:var(--mist)}
 
@@ -203,7 +200,7 @@ tbody td.ctr{text-align:center}
 
   #sopref-table td:nth-child(2){position:static}
   #sopref-table th:nth-child(2){left:auto;box-shadow:none}
-  #sopref-table th:nth-child(1),#sopref-table td:nth-child(1){min-width:75px;max-width:75px;box-shadow:2px 0 4px rgba(0,0,0,.08)}
+  #sopref-table th:nth-child(1),#sopref-table td:nth-child(1){min-width:95px;max-width:95px;white-space:normal;box-shadow:2px 0 4px rgba(0,0,0,.08)}
 }
 .phase-hdr{cursor:pointer;user-select:none}
 .phase-hdr td{background:var(--gold-dim);border-left:3px solid var(--gold);padding:7px 12px;font-size:12px;font-weight:700;color:var(--earth)}
@@ -212,9 +209,9 @@ tbody td.ctr{text-align:center}
 .phase-hdr.collapsed .chev{transform:rotate(-90deg)}
 .phase-hdr .ph-meta{float:right;font-weight:400;font-size:10px;color:var(--ash);text-transform:none;letter-spacing:0}
 @media(max-width:700px){
-  .phase-hdr td{padding:6px 8px;font-size:11px}
+  .phase-hdr td{padding:6px 8px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .phase-hdr .chev{font-size:9px;margin-right:5px}
-  .phase-hdr .ph-meta{font-size:9px}
+  .phase-hdr .ph-meta{float:none;display:block;font-size:9px;margin-top:1px;white-space:nowrap}
   .grp-hdr td{padding:4px 8px;font-size:9px}
 }
 .phase-row-hidden{display:none}
