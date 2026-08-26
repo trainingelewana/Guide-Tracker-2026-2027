@@ -730,11 +730,21 @@ function switchTab(name){
   document.getElementById('tab-'+name).classList.add('active');
   const tabs=['onboarding','leaderboard','pdp','famtrips','equipment','training','sopmatrix','sopref'];
   document.querySelectorAll('.nav-tab')[tabs.indexOf(name)].classList.add('active');
-  // Equipment/Matrix have 2-row sticky headers whose stacking is computed from the rendered
-  // row height. Measuring while a tab is display:none always returns 0, so recompute now
-  // that the tab is actually visible (a render that happened while hidden gets it wrong).
-  if (name==='equipment') stackStickyHeaderRows('eq-table');
-  if (name==='sopmatrix') stackStickyHeaderRows('mx-table');
+  // Sticky-header stacking and frozen-column widths are both measured from the rendered DOM.
+  // Measuring while a tab is display:none always returns 0, so recompute now that the tab
+  // just became visible — a render that happened earlier while hidden got it wrong.
+  const tableByTab = {leaderboard:'lb-table', pdp:'pdp-table', famtrips:'fam-table',
+    equipment:'eq-table', sopmatrix:'mx-table', sopref:'sopref-table'};
+  const tid = tableByTab[name];
+  if (tid) {
+    if (name==='equipment') stackStickyHeaderRows('eq-table');
+    if (name==='sopmatrix') stackStickyHeaderRows('mx-table');
+    alignFrozenColumns(tid, currentFrozenCount(tid));
+  }
+  if (name==='training') {
+    alignFrozenColumns('tr-guide-table', currentFrozenCount('tr-guide-table'));
+    alignFrozenColumns('tr-prop-table', currentFrozenCount('tr-prop-table'));
+  }
 }
 
 // ── TAB 1: Onboarding ────────────────────────────────────────────
@@ -1006,6 +1016,7 @@ function renderEquipment() {
   });
   document.getElementById('eq-tbody').innerHTML = rows;
   stackStickyHeaderRows('eq-table');
+  alignFrozenColumns('eq-table', currentFrozenCount('eq-table'));
 }
 
 // Multi-row sticky headers: the generic CSS gives every thead row "top:0", which is correct
@@ -1020,9 +1031,77 @@ function stackStickyHeaderRows(tableId) {
   const row1Height = rowsEls[0].getBoundingClientRect().height;
   rowsEls[1].querySelectorAll('th').forEach(th => { th.style.top = row1Height + 'px'; });
 }
+
+// How many leading columns are frozen for each table, and how that count changes on phone
+// widths (some tables freeze fewer columns below 700px so more data stays visible).
+const FROZEN_COLS = {
+  'eq-table':   { desktop: 5, mobile: 4 },
+  'mx-table':   { desktop: 4, mobile: 2 },
+  'lb-table':   { desktop: 3, mobile: 2 },
+  'pdp-table':  { desktop: 2, mobile: 1 },
+  'fam-table':  { desktop: 2, mobile: 1 },
+  'sopref-table': { desktop: 2, mobile: 1 },
+  'ob-task-table': { desktop: 2, mobile: 2 },
+  'tr-guide-table': { desktop: 1, mobile: 1 },
+  'tr-prop-table':  { desktop: 1, mobile: 1 },
+};
+function currentFrozenCount(tableId) {
+  const cfg = FROZEN_COLS[tableId];
+  if (!cfg) return 0;
+  return window.innerWidth <= 700 ? cfg.mobile : cfg.desktop;
+}
+
+// The tables use table-layout:auto (columns size themselves from their widest content across
+// every row), so a column's real rendered width can differ from whatever pixel value CSS
+// suggested — most visibly when a cell wraps onto 2-3 lines. The frozen columns' sticky "left"
+// offset must match the ACTUAL width of the columns before them, not an assumed one, or the
+// seam between the frozen block and the scrolling columns drifts out of alignment. This
+// measures real widths from a reference row (skipping any row with a colspan in that zone,
+// e.g. a category/country divider) and applies the correct cumulative left to every row.
+function alignFrozenColumns(tableId, frozenCount) {
+  const table = document.getElementById(tableId);
+  if (!table || !frozenCount) return;
+  const allRows = table.querySelectorAll('tr');
+  let refRow = null;
+  for (const tr of allRows) {
+    const cells = tr.children;
+    if (cells.length < frozenCount) continue;
+    let clean = true;
+    for (let i = 0; i < frozenCount; i++) {
+      if (cells[i].colSpan > 1) { clean = false; break; }
+    }
+    if (clean) { refRow = tr; break; }
+  }
+  if (!refRow) return;
+  const refCells = refRow.children;
+  const lefts = [];
+  let cumulative = 0;
+  for (let i = 0; i < frozenCount; i++) {
+    lefts.push(cumulative);
+    cumulative += refCells[i].getBoundingClientRect().width;
+  }
+  allRows.forEach(tr => {
+    const cells = tr.children;
+    for (let i = 0; i < frozenCount && i < cells.length; i++) {
+      if (cells[i].colSpan > 1) continue;
+      cells[i].style.left = lefts[i] + 'px';
+    }
+  });
+}
+function alignAllFrozenTables() {
+  Object.keys(FROZEN_COLS).forEach(id => {
+    const table = document.getElementById(id);
+    if (table && table.closest('.tab-panel').classList.contains('active')) {
+      alignFrozenColumns(id, currentFrozenCount(id));
+    }
+  });
+}
+let _resizeTimer;
 window.addEventListener('resize', () => {
   stackStickyHeaderRows('eq-table');
   stackStickyHeaderRows('mx-table');
+  clearTimeout(_resizeTimer);
+  _resizeTimer = setTimeout(alignAllFrozenTables, 150);
 });
 
 // ── TAB 5: Training Recs ─────────────────────────────────────────
@@ -1371,6 +1450,7 @@ async function init(){
   }
   collapsedPhases = null;
   renderAll();
+  alignFrozenColumns('ob-task-table', currentFrozenCount('ob-task-table'));
   document.getElementById('live-date').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
 }
 
@@ -1636,6 +1716,7 @@ function renderMatrix() {
 
   document.getElementById('mx-tbody').innerHTML = tbody;
   stackStickyHeaderRows('mx-table');
+  alignFrozenColumns('mx-table', currentFrozenCount('mx-table'));
 }
 
 function exportMatrixCSV() {
