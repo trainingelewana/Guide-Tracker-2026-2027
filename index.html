@@ -206,11 +206,17 @@ tbody td.ctr{text-align:center}
   #sopref-table th:nth-child(1),#sopref-table td:nth-child(1){min-width:75px;max-width:75px;box-shadow:2px 0 4px rgba(0,0,0,.08)}
 }
 .phase-hdr{cursor:pointer;user-select:none}
-.phase-hdr td{background:var(--gold-dim);border-left:3px solid var(--gold);padding:9px 12px;font-weight:700;color:var(--earth)}
+.phase-hdr td{background:var(--gold-dim);border-left:3px solid var(--gold);padding:7px 12px;font-size:12px;font-weight:700;color:var(--earth)}
 .phase-hdr:hover td{background:var(--gold-light)}
 .phase-hdr .chev{display:inline-block;transition:transform .15s;margin-right:8px;font-size:10px;color:var(--gold)}
 .phase-hdr.collapsed .chev{transform:rotate(-90deg)}
 .phase-hdr .ph-meta{float:right;font-weight:400;font-size:10px;color:var(--ash);text-transform:none;letter-spacing:0}
+@media(max-width:700px){
+  .phase-hdr td{padding:6px 8px;font-size:11px}
+  .phase-hdr .chev{font-size:9px;margin-right:5px}
+  .phase-hdr .ph-meta{font-size:9px}
+  .grp-hdr td{padding:4px 8px;font-size:9px}
+}
 .phase-row-hidden{display:none}
 
 /* ── Score bar ── */
@@ -727,6 +733,11 @@ function switchTab(name){
   document.getElementById('tab-'+name).classList.add('active');
   const tabs=['onboarding','leaderboard','pdp','famtrips','equipment','training','sopmatrix','sopref'];
   document.querySelectorAll('.nav-tab')[tabs.indexOf(name)].classList.add('active');
+  // Equipment/Matrix have 2-row sticky headers whose stacking is computed from the rendered
+  // row height. Measuring while a tab is display:none always returns 0, so recompute now
+  // that the tab is actually visible (a render that happened while hidden gets it wrong).
+  if (name==='equipment') stackStickyHeaderRows('eq-table');
+  if (name==='sopmatrix') stackStickyHeaderRows('mx-table');
 }
 
 // ── TAB 1: Onboarding ────────────────────────────────────────────
