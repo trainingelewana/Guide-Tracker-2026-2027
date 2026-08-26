@@ -102,6 +102,7 @@ body{font-family:'DM Sans','Helvetica Neue',sans-serif;background:var(--mist);co
   .tbl-wrap::-webkit-scrollbar-thumb{border-width:2px}
 }
 table{border-collapse:collapse;width:100%;min-width:600px}
+#eq-table{table-layout:fixed;width:auto}
 thead th{background:var(--dusk);color:#fff;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;padding:9px 12px;text-align:left;white-space:nowrap;position:sticky;top:0;z-index:3}
 thead th.ctr{text-align:center}
 tbody tr{border-bottom:1px solid var(--smoke)}
@@ -112,14 +113,40 @@ tbody td.ctr{text-align:center}
 .alt{background:var(--mist)}
 .grp-hdr td{background:var(--dusk);color:rgba(255,255,255,.65);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:5px 12px}
 
+/* ── Equipment table column widths — set via <colgroup>, not per-cell, so table-layout:fixed
+   guarantees every row (header row 1, header row 2, every body row) renders identical column
+   widths. This is what actually fixes sticky-column drift: with table-layout:auto, a column's
+   real width can vary by content (e.g. text wrapping differently), so the "left" offset used to
+   position a frozen column can end up not matching where it actually renders. Fixed layout +
+   colgroup removes that ambiguity entirely — the width IS the width, everywhere. */
+#eq-colgroup col:nth-child(1){width:120px}
+#eq-colgroup col:nth-child(2){width:55px}
+#eq-colgroup col:nth-child(3){width:50px}
+#eq-colgroup col:nth-child(4){width:80px}
+#eq-colgroup col:nth-child(5){width:110px}
+#eq-colgroup col.eq-col-qty{width:45px}
+#eq-colgroup col.eq-col-cond{width:60px}
+@media(max-width:700px){
+  #eq-colgroup col:nth-child(1){width:85px}
+  #eq-colgroup col:nth-child(2){width:38px}
+  #eq-colgroup col:nth-child(3){width:35px}
+  #eq-colgroup col:nth-child(4){width:62px}
+  #eq-colgroup col:nth-child(5){width:100px}
+  #eq-colgroup col.eq-col-qty{width:42px}
+  #eq-colgroup col.eq-col-cond{width:55px}
+}
+
 /* ── Frozen / sticky columns: Equipment table ──
    Column order after JS build: 1 Equipment Item · 2 Min Qty · 3 Unit · 4 Category · 5 SOP Refs · then per-property Qty/Condition pairs.
-   Desktop freezes all 5; mobile freezes only Item + Min Qty so 2-3 property columns stay visible while scrolling. */
-#eq-table th:nth-child(1),#eq-table td:nth-child(1){position:sticky;left:0;z-index:2;min-width:120px;max-width:120px;background:var(--canvas);white-space:normal}
-#eq-table th:nth-child(2),#eq-table td:nth-child(2){position:sticky;left:120px;z-index:2;min-width:55px;max-width:55px;background:var(--canvas)}
-#eq-table th:nth-child(3),#eq-table td:nth-child(3){position:sticky;left:175px;z-index:2;min-width:50px;max-width:50px;background:var(--canvas)}
-#eq-table th:nth-child(4),#eq-table td:nth-child(4){position:sticky;left:225px;z-index:2;min-width:80px;max-width:80px;background:var(--canvas)}
-#eq-table th:nth-child(5),#eq-table td:nth-child(5){position:sticky;left:305px;z-index:2;min-width:110px;max-width:110px;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
+   Desktop freezes all 5; mobile freezes through Category so Unit/Category/Item/MinQty stay
+   visible while scrolling, with only SOP Refs scrolling away. "left" values below are fallback
+   defaults only — JS (alignFrozenColumns) measures actual rendered widths and overrides these
+   with exact pixel offsets, since colgroup widths differ by breakpoint. */
+#eq-table th:nth-child(1),#eq-table td:nth-child(1){position:sticky;left:0;z-index:2;background:var(--canvas);white-space:normal}
+#eq-table th:nth-child(2),#eq-table td:nth-child(2){position:sticky;left:120px;z-index:2;background:var(--canvas)}
+#eq-table th:nth-child(3),#eq-table td:nth-child(3){position:sticky;left:175px;z-index:2;background:var(--canvas)}
+#eq-table th:nth-child(4),#eq-table td:nth-child(4){position:sticky;left:225px;z-index:2;background:var(--canvas)}
+#eq-table th:nth-child(5),#eq-table td:nth-child(5){position:sticky;left:305px;z-index:2;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
 #eq-table thead th:nth-child(-n+5){z-index:4;background:var(--dusk)}
 #eq-table tbody tr.alt td:nth-child(-n+5){background:var(--mist)}
 
@@ -136,10 +163,7 @@ tbody td.ctr{text-align:center}
 @media(max-width:700px){
   #eq-table td:nth-child(5){position:static}
   #eq-table th:nth-child(5){left:auto;box-shadow:none}
-  #eq-table th:nth-child(1),#eq-table td:nth-child(1){min-width:85px;max-width:85px}
-  #eq-table th:nth-child(2),#eq-table td:nth-child(2){left:85px;min-width:38px;max-width:38px}
-  #eq-table th:nth-child(3),#eq-table td:nth-child(3){left:123px;min-width:35px;max-width:35px}
-  #eq-table th:nth-child(4),#eq-table td:nth-child(4){left:158px;min-width:62px;max-width:62px;box-shadow:2px 0 4px rgba(0,0,0,.08)}
+  #eq-table th:nth-child(4),#eq-table td:nth-child(4){box-shadow:2px 0 4px rgba(0,0,0,.08)}
 
   #mx-table td:nth-child(3),
   #mx-table td:nth-child(4){position:static}
@@ -507,7 +531,7 @@ tbody td.ctr{text-align:center}
     ✅ Good – SOP compliant &nbsp;⚠️ Fair – action needed &nbsp;❌ Poor / missing &nbsp;🔄 In service &nbsp;— Not yet audited
   </div>
   <div class="tbl-wrap">
-    <table id="eq-table"><thead id="eq-thead"></thead><tbody id="eq-tbody"></tbody></table>
+    <table id="eq-table"><colgroup id="eq-colgroup"></colgroup><thead id="eq-thead"></thead><tbody id="eq-tbody"></tbody></table>
   </div>
 </div>
 
@@ -994,6 +1018,11 @@ function renderEquipment() {
   const propsToShow = propF ? PROPS.filter(p=>p.code===propF) : PROPS;
   document.getElementById('eq-prop-filter').innerHTML =
     '<option value="">All Properties</option>'+PROPS.map(p=>`<option value="${p.code}" ${propF===p.code?'selected':''}>${p.code} – ${p.name}</option>`).join('');
+
+  // Build colgroup — the single source of truth for column widths under table-layout:fixed
+  document.getElementById('eq-colgroup').innerHTML =
+    '<col><col><col><col><col>' +
+    propsToShow.map(()=>'<col class="eq-col-qty"><col class="eq-col-cond">').join('');
 
   // Build header
   document.getElementById('eq-thead').innerHTML = `<tr>
