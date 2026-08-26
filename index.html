@@ -352,6 +352,17 @@ tbody td.ctr{text-align:center}
 .modal textarea{width:100%;height:80px;border:1.5px solid var(--smoke);border-radius:var(--radius);padding:10px;font-family:monospace;font-size:11px;resize:vertical;color:var(--earth);margin:8px 0}
 .modal textarea:focus{outline:none;border-color:var(--gold)}
 .modal-actions{display:flex;gap:10px;margin-top:16px;justify-content:flex-end}
+
+/* ── Rotate-to-landscape suggestion ──
+   Hidden by default; JS shows it only when both are true: a touch/coarse-pointer device
+   (real phone/tablet, not a resized desktop browser window) AND currently in portrait. */
+.rotate-overlay{display:none;position:fixed;inset:0;background:rgba(28,26,23,.92);z-index:1000;align-items:center;justify-content:center;padding:28px}
+.rotate-overlay.show{display:flex}
+.rotate-card{background:var(--canvas);border-radius:var(--radius);padding:28px 24px;max-width:320px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.4)}
+.rotate-icon{font-size:40px;margin-bottom:14px;animation:rotate-hint 1.8s ease-in-out infinite}
+.rotate-card p{font-size:14px;color:var(--earth);line-height:1.5;margin-bottom:18px}
+.rotate-card .btn{width:100%}
+@keyframes rotate-hint{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-90deg)}}
 .modal-close{position:absolute;top:14px;right:18px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--ash)}
 
 /* ── Eq condition cell ── */
@@ -696,6 +707,14 @@ tbody td.ctr{text-align:center}
 </div>
 
 </main>
+
+<div id="rotate-overlay" class="rotate-overlay">
+  <div class="rotate-card">
+    <div class="rotate-icon">📱↻</div>
+    <p>This dashboard has a lot of wide tables — turning your phone sideways gives you a much better view.</p>
+    <button class="btn" onclick="dismissRotateOverlay()">Got it</button>
+  </div>
+</div>
 
 <script>
 // ── Embedded data from EC_GT_AM_Complete_2026_2027.xlsx ──────────
@@ -1217,6 +1236,34 @@ document.addEventListener('DOMContentLoaded', () => {
   if (bar) bar.addEventListener('scroll', updateNavFade);
   updateNavFade();
 });
+
+// Suggest rotating to landscape — but only for an actual mobile/tablet device, never a
+// desktop browser that's simply been resized narrow. "Mobile" here is detected by touch
+// capability (pointer: coarse + hover: none), which a real phone/tablet has and a mouse-driven
+// desktop browser doesn't, regardless of window width. Portrait is just innerHeight > innerWidth.
+function isTouchDevice() {
+  if (typeof window.matchMedia !== 'function') return false;
+  try {
+    return window.matchMedia('(pointer: coarse)').matches && window.matchMedia('(hover: none)').matches;
+  } catch(e) { return false; }
+}
+function isPortrait() {
+  return window.innerHeight > window.innerWidth;
+}
+function dismissRotateOverlay() {
+  document.getElementById('rotate-overlay').classList.remove('show');
+  sessionStorage.setItem('ec_rotate_dismissed', '1');
+}
+function checkRotateOverlay() {
+  const overlay = document.getElementById('rotate-overlay');
+  if (!overlay) return;
+  const dismissed = sessionStorage.getItem('ec_rotate_dismissed') === '1';
+  const shouldShow = isTouchDevice() && isPortrait() && !dismissed;
+  overlay.classList.toggle('show', shouldShow);
+}
+window.addEventListener('orientationchange', () => setTimeout(checkRotateOverlay, 200));
+window.addEventListener('resize', checkRotateOverlay);
+document.addEventListener('DOMContentLoaded', () => setTimeout(checkRotateOverlay, 300));
 
 // ── TAB 5: Training Recs ─────────────────────────────────────────
 function renderTraining() {
