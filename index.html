@@ -1529,12 +1529,18 @@ async function loadLiveData(sheetId) {
   let lastCat = '';
   for (const row of meiRows) {
     if (!propCols && row[8]) {
-      // header row: property codes start at column I (index 8), pairs of (qty, cond)
-      propCols = [];
+      // header row: property codes start at column I (index 8), pairs of (qty, cond).
+      // Don't commit to this row as "the header" unless it actually yields real codes —
+      // a wide merged banner row above the real header can report its own text across
+      // every spanned column in the live API response (unlike a raw file read, where a
+      // merge's value only lives in its anchor cell), which would otherwise falsely
+      // trigger this check on the wrong row and permanently lock in zero matches.
+      const candidateCols = [];
       for (let c = 8; c < row.length; c += 2) {
         const code = (row[c]||'').trim().split(/\s+/)[0];
-        if (VALID_CODES.has(code)) propCols.push([code, c]);
+        if (VALID_CODES.has(code)) candidateCols.push([code, c]);
       }
+      if (candidateCols.length > 0) propCols = candidateCols;
       continue;
     }
     const item = (row[2]||'').trim();
