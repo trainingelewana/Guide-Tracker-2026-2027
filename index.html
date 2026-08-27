@@ -1523,27 +1523,20 @@ async function loadLiveData(sheetId) {
 
   setStatus('Loading equipment inventory…');
   const meiRows = await fetchSheetTab(sheetId, 'Master Equipment Inventory');
-  const VALID_CODES = new Set(['LTC','LSB','LLS','LSC','KHL','SRM','EPC','LEPC','TCA','EKM','KLZ','ACL','TTT','TMN','SPC','SMC','SXR','NXR','RW1','RW2']);
-  let propCols = null;
+  // Property columns start at column I (index 8) and run in the same order as PROPS,
+  // two columns per property (Qty, then Condition). This used to be auto-detected from
+  // the sheet's own header row, but Google's Sheets API strips that header row out of
+  // the data entirely before we ever see it (confirmed by inspecting the actual raw rows
+  // it returns — they start straight at the first equipment item, no header present at
+  // all) — so detection could never succeed. The layout itself is fixed and known, so
+  // there's nothing to detect; map it directly.
+  const propCols = PROPS.map((p, i) => [p.code, 8 + i * 2]);
   const newEquip = [];
   let lastCat = '';
   for (const row of meiRows) {
-    if (!propCols) {
-      // Find the header row by scanning every column for a recognizable property code
-      // as its first word — no assumption about a fixed starting column. This is
-      // deliberately not tied to "codes start at column I" since that assumption keeps
-      // failing to match how the live API actually reports this sheet's structure.
-      const candidateCols = [];
-      for (let c = 0; c < row.length; c++) {
-        const code = (row[c]||'').toString().trim().split(/\s+/)[0];
-        if (VALID_CODES.has(code)) candidateCols.push([code, c]);
-      }
-      if (candidateCols.length >= 3) propCols = candidateCols;
-      continue;
-    }
     const item = (row[2]||'').trim();
-    if (!item || !propCols) continue;
     if ((row[1]||'').trim()) lastCat = row[1].trim();
+    if (!item) continue;
     const props = {};
     for (const [code, col] of propCols) {
       props[code] = { qty: (row[col]||'').trim(), cond: (row[col+1]||'').trim() };
@@ -1556,11 +1549,7 @@ async function loadLiveData(sheetId) {
       props,
     });
   }
-  if (!propCols) {
-    console.warn('[EC Guide Tracker] Equipment: could not find the property-code header row. First 6 raw rows from the sheet:', meiRows.slice(0, 6));
-  } else {
-    console.log('[EC Guide Tracker] Equipment: detected property columns:', propCols.map(([code,col])=>`${code}@${col}`).join(', '));
-  }
+  console.log(`[EC Guide Tracker] Equipment: parsed ${newEquip.length} items across ${propCols.length} properties.`);
 
   setStatus('Loading PDP tracker…');
   const pdpRows = await fetchSheetTab(sheetId, 'Guide PDP Tracker');
