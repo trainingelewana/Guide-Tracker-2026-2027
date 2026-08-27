@@ -1528,19 +1528,17 @@ async function loadLiveData(sheetId) {
   const newEquip = [];
   let lastCat = '';
   for (const row of meiRows) {
-    if (!propCols && row[8]) {
-      // header row: property codes start at column I (index 8), pairs of (qty, cond).
-      // Don't commit to this row as "the header" unless it actually yields real codes —
-      // a wide merged banner row above the real header can report its own text across
-      // every spanned column in the live API response (unlike a raw file read, where a
-      // merge's value only lives in its anchor cell), which would otherwise falsely
-      // trigger this check on the wrong row and permanently lock in zero matches.
+    if (!propCols) {
+      // Find the header row by scanning every column for a recognizable property code
+      // as its first word — no assumption about a fixed starting column. This is
+      // deliberately not tied to "codes start at column I" since that assumption keeps
+      // failing to match how the live API actually reports this sheet's structure.
       const candidateCols = [];
-      for (let c = 8; c < row.length; c += 2) {
-        const code = (row[c]||'').trim().split(/\s+/)[0];
+      for (let c = 0; c < row.length; c++) {
+        const code = (row[c]||'').toString().trim().split(/\s+/)[0];
         if (VALID_CODES.has(code)) candidateCols.push([code, c]);
       }
-      if (candidateCols.length > 0) propCols = candidateCols;
+      if (candidateCols.length >= 3) propCols = candidateCols;
       continue;
     }
     const item = (row[2]||'').trim();
@@ -1557,6 +1555,11 @@ async function loadLiveData(sheetId) {
       min_qty: (row[5]||'').trim(),
       props,
     });
+  }
+  if (!propCols) {
+    console.warn('[EC Guide Tracker] Equipment: could not find the property-code header row. First 6 raw rows from the sheet:', meiRows.slice(0, 6));
+  } else {
+    console.log('[EC Guide Tracker] Equipment: detected property columns:', propCols.map(([code,col])=>`${code}@${col}`).join(', '));
   }
 
   setStatus('Loading PDP tracker…');
