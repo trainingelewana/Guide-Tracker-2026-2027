@@ -195,6 +195,12 @@ tbody td.ctr{text-align:center}
 #lb-table thead th:nth-child(-n+3){z-index:4;background:var(--dusk)}
 #lb-table tbody tr:nth-child(even) td:nth-child(-n+3){background:var(--mist)}
 
+#bl-table{table-layout:fixed;width:100%;min-width:1120px}
+.bl-c1{width:150px} .bl-c2{width:60px} .bl-c3{width:150px} .bl-c4{width:150px} .bl-c5{width:150px} .bl-c6{width:90px} .bl-c7{width:110px} .bl-c8{width:100px} .bl-c9{width:100px} .bl-c10{width:100px}
+#bl-table th:nth-child(1),#bl-table td:nth-child(1){position:sticky;left:0;z-index:2;background:var(--canvas)}
+#bl-table th:nth-child(2),#bl-table td:nth-child(2){position:sticky;left:150px;z-index:2;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
+#bl-table thead th:nth-child(-n+2){z-index:4;background:var(--dusk)}
+#bl-table tbody tr:nth-child(even) td:nth-child(-n+2){background:var(--mist)}
 #pdp-table{table-layout:fixed;width:100%;min-width:1180px}
 .pdp-c1{width:130px} .pdp-c2{width:90px} .pdp-c3{width:80px} .pdp-c4{width:130px} .pdp-c5{width:160px} .pdp-c6{width:160px} .pdp-c7{width:90px} .pdp-c8{width:90px} .pdp-c9{width:90px} .pdp-c10{width:160px}
 #pdp-table th:nth-child(1),#pdp-table td:nth-child(1){position:sticky;left:0;z-index:2;background:var(--canvas)}
@@ -203,7 +209,7 @@ tbody td.ctr{text-align:center}
 #pdp-table tbody tr:nth-child(even) td:nth-child(-n+2){background:var(--mist)}
 
 #fam-table{table-layout:fixed;width:100%;min-width:1015px}
-.fam-c1{width:130px} .fam-c2{width:55px} .fam-c3{width:70px} .fam-c4{width:150px} .fam-c5{width:100px} .fam-c6{width:90px} .fam-c7{width:90px} .fam-c8{width:70px} .fam-c9{width:80px} .fam-c10{width:180px}
+.fam-c1{width:130px} .fam-c2{width:55px} .fam-c3{width:70px} .fam-c4{width:150px} .fam-c5{width:60px} .fam-c6{width:110px} .fam-c7{width:90px} .fam-c8{width:70px} .fam-c9{width:70px} .fam-c10{width:80px} .fam-c11{width:220px} .fam-c12{width:200px}
 #fam-table th:nth-child(1),#fam-table td:nth-child(1){position:sticky;left:0;z-index:2;background:var(--canvas)}
 #fam-table th:nth-child(2),#fam-table td:nth-child(2){position:sticky;left:130px;z-index:2;background:var(--canvas);box-shadow:2px 0 4px rgba(0,0,0,.08)}
 #fam-table thead th:nth-child(-n+2){z-index:4;background:var(--dusk)}
@@ -244,6 +250,12 @@ tbody td.ctr{text-align:center}
   #pdp-table th:nth-child(2){left:auto;box-shadow:none}
   .pdp-c1{width:110px}
   #pdp-table th:nth-child(1),#pdp-table td:nth-child(1){box-shadow:2px 0 4px rgba(0,0,0,.08)}
+
+  #bl-table{min-width:1080px}
+  #bl-table td:nth-child(2){position:static}
+  #bl-table th:nth-child(2){left:auto;box-shadow:none}
+  .bl-c1{width:110px}
+  #bl-table th:nth-child(1),#bl-table td:nth-child(1){box-shadow:2px 0 4px rgba(0,0,0,.08)}
 
   #fam-table{min-width:995px}
   #fam-table td:nth-child(2){position:static}
@@ -420,6 +432,7 @@ tbody td.ctr{text-align:center}
 <div class="nav-bar-wrap">
 <nav class="nav-bar" id="nav-bar">
   <div class="nav-tab active"   onclick="switchTab('onboarding')">📋 Onboarding</div>
+  <div class="nav-tab"          onclick="switchTab('baselines')">🎯 Baselines</div>
   <div class="nav-tab"          onclick="switchTab('leaderboard')">🏆 Leaderboard</div>
   <div class="nav-tab"          onclick="switchTab('pdp')">📈 PDP Tracker</div>
   <div class="nav-tab"          onclick="switchTab('famtrips')">✈️ Fam Trips</div>
@@ -475,6 +488,37 @@ tbody td.ctr{text-align:center}
       <th>Target</th><th class="ctr">Status</th><th>Category</th><th class="ctr">Priority</th><th>Owner</th>
     </tr></thead><tbody id="ob-tasks-tbody"></tbody></table>
   </div>
+</div>
+
+<!-- ══ TAB 1b – PROPERTY BASELINE ASSESSMENTS ═══════════════════ -->
+<div id="tab-baselines" class="tab-panel">
+  <div class="source-bar">
+    <p><strong>Source:</strong> Live from Google Sheets · Property Baseline Assessment · Reads directly from the workbook — enter Senior/Middle/Junior guide scores there and this updates automatically</p>
+  </div>
+  <div class="section-hdr"><div><h2>Property Baseline Assessments</h2><p>One Senior, one Middle and one Junior guide sampled per property to establish the property's starting benchmark, before ongoing individual guide tracking begins</p></div></div>
+  <div class="cards">
+    <div class="card info">  <div class="card-num" id="bl-total">20</div>   <div class="card-lbl">Properties</div></div>
+    <div class="card good">  <div class="card-num" id="bl-done">0</div>    <div class="card-lbl">✅ Complete</div></div>
+    <div class="card danger"><div class="card-num" id="bl-pending">20</div> <div class="card-lbl">⬜ Pending</div></div>
+    <div class="card warn">  <div class="card-num" id="bl-avg">—</div>    <div class="card-lbl">Avg Baseline (assessed)</div></div>
+  </div>
+  <div class="filter-bar">
+    <span class="filter-lbl">Filter:</span>
+    <select id="bl-ctry" onchange="renderBaselines()"><option value="">All Countries</option><option>KE</option><option>TZ</option><option>RW</option></select>
+    <select id="bl-status" onchange="renderBaselines()"><option value="">All Statuses</option><option value="done">✅ Complete</option><option value="pending">⬜ Pending</option></select>
+    <input id="bl-search" type="text" placeholder="Search property or guide…" oninput="renderBaselines()" style="min-width:160px">
+  </div>
+  <div class="tbl-wrap">
+    <table id="bl-table"><colgroup>
+      <col class="bl-c1"><col class="bl-c2"><col class="bl-c3"><col class="bl-c4"><col class="bl-c5"><col class="bl-c6"><col class="bl-c7"><col class="bl-c8"><col class="bl-c9"><col class="bl-c10">
+    </colgroup><thead><tr>
+      <th>Property</th><th class="ctr">Country</th>
+      <th>Senior Guide</th><th>Middle Guide</th><th>Junior Guide</th>
+      <th class="ctr">Baseline Avg /4</th><th class="ctr">Rating</th>
+      <th>Assessment Date</th><th>Assessor</th><th class="ctr">Status</th>
+    </tr></thead><tbody id="bl-tbody"></tbody></table>
+  </div>
+  <p style="font-size:11px;color:var(--ash);margin-top:-14px">1 = Unsatisfactory · 2 = Needs Development · 3 = Meets Standard · 4 = Exceeds Standard</p>
 </div>
 
 <!-- ══ TAB 2 – LEADERBOARD ════════════════════════════════════ -->
@@ -553,15 +597,16 @@ tbody td.ctr{text-align:center}
     <div class="card good">  <div class="card-num" id="fam-conf">0</div>     <div class="card-lbl">✅ Confirmed</div></div>
     <div class="card warn">  <div class="card-num" id="fam-plan">0</div>     <div class="card-lbl">📅 Planned</div></div>
     <div class="card danger"><div class="card-num" id="fam-tbc">0</div>      <div class="card-lbl">⬜ TBC</div></div>
+    <div class="card info">  <div class="card-num" id="fam-guides">0</div>   <div class="card-lbl">Guides Covered</div></div>
   </div>
   <div class="tbl-wrap">
     <table id="fam-table"><colgroup>
-      <col class="fam-c1"><col class="fam-c2"><col class="fam-c3"><col class="fam-c4"><col class="fam-c5"><col class="fam-c6"><col class="fam-c7"><col class="fam-c8"><col class="fam-c9"><col class="fam-c10">
+      <col class="fam-c1"><col class="fam-c2"><col class="fam-c3"><col class="fam-c4"><col class="fam-c5"><col class="fam-c6"><col class="fam-c7"><col class="fam-c8"><col class="fam-c9"><col class="fam-c10"><col class="fam-c11"><col class="fam-c12">
     </colgroup><thead><tr>
       <th>Property</th><th class="ctr">Code</th><th class="ctr">Country</th>
-      <th>Conservation Area / Group</th><th>Proposed Dates</th><th class="ctr">Status</th>
+      <th>Conservation Area / Group</th><th class="ctr">Guides</th><th>Proposed Dates</th><th class="ctr">Status</th>
       <th class="ctr">GM Notified</th><th class="ctr">Register</th><th class="ctr">Assessment</th>
-      <th>Key Objectives</th>
+      <th>Contacts (GM · AGM · Head Guide)</th><th>Key Objectives</th>
     </tr></thead><tbody id="fam-tbody"></tbody></table>
   </div>
 </div>
@@ -759,6 +804,7 @@ let tasks   = EXCEL_DATA.tasks.map(t=>({...t}));
 let fam     = EXCEL_DATA.fam.map(f=>({...f}));
 let equip   = EXCEL_DATA.equip.map(e=>({...e}));
 let pdp     = []; // Guide PDP Tracker rows — fetched live, not part of the embedded snapshot
+let baselines = []; // Property Baseline Assessment rows — fetched live, not part of the embedded snapshot
 let sopRef  = []; // SOP Reference Index rows — fetched live, not part of the embedded snapshot
 let collapsedCountries = null; // leaderboard country-group collapse state, lazily initialised
 const phases = EXCEL_DATA.ob_phases;
@@ -831,7 +877,7 @@ function switchTab(name){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
-  const tabs=['onboarding','leaderboard','pdp','famtrips','equipment','training','sopmatrix','sopref'];
+  const tabs=['onboarding','baselines','leaderboard','pdp','famtrips','equipment','training','sopmatrix','sopref'];
   const activeTabEl = document.querySelectorAll('.nav-tab')[tabs.indexOf(name)];
   activeTabEl.classList.add('active');
   if (typeof activeTabEl.scrollIntoView === 'function') {
@@ -840,7 +886,7 @@ function switchTab(name){
   // Sticky-header stacking and frozen-column widths are both measured from the rendered DOM.
   // Measuring while a tab is display:none always returns 0, so recompute now that the tab
   // just became visible — a render that happened earlier while hidden got it wrong.
-  const tableByTab = {leaderboard:'lb-table', pdp:'pdp-table', famtrips:'fam-table',
+  const tableByTab = {baselines:'bl-table', leaderboard:'lb-table', pdp:'pdp-table', famtrips:'fam-table',
     equipment:'eq-table', sopmatrix:'mx-table', sopref:'sopref-table'};
   const tid = tableByTab[name];
   if (tid) {
@@ -1046,24 +1092,33 @@ function toggleCountryGroup(country) {
 
 // ── TAB 3: Fam Trips ─────────────────────────────────────────────
 function renderFamTrips() {
-  let conf=0,planned=0,tbc=0;
+  let conf=0,planned=0,tbc=0,guideTotal=0;
   const groups={KE:'🇰🇪 Kenya',TZ:'🇹🇿 Tanzania',RW:'🇷🇼 Rwanda'};
   let prevCtry='', rows='';
   fam.forEach((f,i)=>{
     if(f.status==='Confirmed'||f.confirmed==='✅ Yes')conf++;
     else if(f.status==='Planned')planned++;
     else tbc++;
+    const guideNum = parseFloat(f.guides);
+    if(!isNaN(guideNum)) guideTotal += guideNum;
     const stMap={'Confirmed':'confirmed','Planned':'planned','TBC':'tbc','Complete':'complete'};
-    if(f.country!==prevCtry){prevCtry=f.country;rows+=`<tr class="grp-hdr"><td colspan="10">${groups[f.country]||f.country} · ${[...new Set(fam.filter(fd=>fd.country===f.country).map(fd=>(PROPS.find(p=>p.code===fd.code)||{}).group).filter(Boolean))].join(' · ')}</td></tr>`;}
+    if(f.country!==prevCtry){prevCtry=f.country;rows+=`<tr class="grp-hdr"><td colspan="12">${groups[f.country]||f.country} · ${[...new Set(fam.filter(fd=>fd.country===f.country).map(fd=>(PROPS.find(p=>p.code===fd.code)||{}).group).filter(Boolean))].join(' · ')}</td></tr>`;}
+    const contacts = [
+      f.gmContact ? `GM: ${f.gmContact}` : '',
+      f.agmContact ? `AGM: ${f.agmContact}` : '',
+      f.hgContact ? `HG: ${f.hgContact}` : '',
+    ].filter(Boolean).join('<br>');
     rows+=`<tr class="${i%2?'alt':''}">
       <td><strong>${f.name}</strong>${f.note?`<br><span style="font-size:10px;color:var(--gold)">${f.note}</span>`:''}</td>
       <td class="ctr">${f.code}</td><td class="ctr">${f.country}</td>
       <td style="font-size:11px;color:var(--ash)">${(PROPS.find(p=>p.code===f.code)||{}).group||'—'}</td>
-      <td style="white-space:nowrap;font-size:11px">${f.dates}</td>
+      <td class="ctr">${f.guides||'—'}</td>
+      <td style="white-space:nowrap;font-size:11px">${f.dates||'—'}</td>
       <td class="ctr">${pill(f.status,stMap[f.status]||'tbc')}</td>
       <td class="ctr" style="font-size:13px">${f.gm.includes('Yes')||f.gm==='✅'?'✅':'⬜'}</td>
       <td class="ctr" style="font-size:13px">${f.reg.includes('Yes')||f.reg==='✅'?'✅':'⬜'}</td>
       <td class="ctr" style="font-size:13px">${f.assess.includes('Yes')||f.assess==='✅'?'✅':'⬜'}</td>
+      <td style="font-size:11px;color:var(--ash)">${contacts||'—'}</td>
       <td style="font-size:11px;color:var(--ash);max-width:220px">${f.objectives}</td>
     </tr>`;
   });
@@ -1071,6 +1126,7 @@ function renderFamTrips() {
   document.getElementById('fam-conf').textContent=conf;
   document.getElementById('fam-plan').textContent=planned;
   document.getElementById('fam-tbc').textContent=tbc;
+  document.getElementById('fam-guides').textContent=guideTotal||0;
 }
 
 // ── TAB 4: Equipment ─────────────────────────────────────────────
@@ -1503,21 +1559,33 @@ async function loadLiveData(sheetId) {
   setStatus('Loading fam trip planner…');
   const ftpRows = await fetchSheetTab(sheetId, 'Fam Trip Planner');
   const newFam = [];
+  // Column layout confirmed against the live sheet on 08 Sep 2026 — three columns
+  // (Guides headcount, a second Target Dates cell, and Head Guide Contact) were
+  // added since this mapping was first written, shifting every field from Status
+  // onward to the right. Re-verify these indices against the sheet if the Fam Trip
+  // Planner tab's columns are ever added to/reordered again.
   for (const row of ftpRows) {
     const name = (row[1]||'').trim();
     const code = (row[2]||'').trim();
     if (!name || !code || name === 'Property') continue;
+    const dateStart = (row[5]||'').trim();
+    const dateEnd = (row[6]||'').trim();
     newFam.push({
       name, code,
       country: (row[3]||'').trim(),
-      dates: (row[4]||'').trim(),
-      status: (row[6]||'').trim(),
-      gm: (row[11]||'⬜ No').trim(),
-      reg: (row[12]||'⬜ No').trim(),
-      assess: (row[13]||'⬜ No').trim(),
-      confirmed: (row[14]||'⬜ No').trim(),
-      objectives: (row[9]||'').trim(),
-      logistics: (row[10]||'').trim(),
+      guides: (row[4]||'').trim(),
+      dates: dateEnd && dateEnd !== dateStart ? `${dateStart} – ${dateEnd}` : dateStart,
+      status: (row[7]||'').trim(),
+      note: (row[8]||'').trim(),
+      gmContact: (row[9]||'').trim(),
+      agmContact: (row[10]||'').trim(),
+      hgContact: (row[11]||'').trim(),
+      objectives: (row[12]||'').trim(),
+      logistics: (row[13]||'').trim(),
+      gm: (row[14]||'⬜ No').trim(),
+      reg: (row[15]||'⬜ No').trim(),
+      assess: (row[16]||'⬜ No').trim(),
+      confirmed: (row[17]||'⬜ No').trim(),
     });
   }
 
@@ -1550,6 +1618,37 @@ async function loadLiveData(sheetId) {
     });
   }
   console.log(`[EC Guide Tracker] Equipment: parsed ${newEquip.length} items across ${propCols.length} properties.`);
+
+  setStatus('Loading property baseline assessments…');
+  // Sheet layout (verified against the raw workbook): several banner/instruction/scoring-key
+  // rows precede the real header row, and gviz only strips one header row automatically — so
+  // rather than guessing how many leading rows to skip, filter on a valid PROPS code in column
+  // B, which only real data rows have. Columns: 0 Property, 1 Code, 2 Country, 3 Sr Guide Name,
+  // 4-8 Sr domains, 9 Sr Overall, 10 Mid Guide Name, 11-15 Mid domains, 16 Mid Overall,
+  // 17 Jr Guide Name, 18-22 Jr domains, 23 Jr Overall, 24-28 Baseline domain avgs
+  // (Safety/Know/Guest/Vehicle/Prof), 29 Baseline Overall Avg, 30 Rating, 31 Assessment Date,
+  // 32 Assessor, 33 Notes.
+  const blRows = await fetchSheetTab(sheetId, 'Property Baseline Assessment');
+  const newBaselines = [];
+  for (const row of blRows) {
+    const code = (row[1]||'').trim();
+    if (!PROPS.find(p => p.code === code)) continue;
+    newBaselines.push({
+      prop: code,
+      propName: (row[0]||'').trim() || propName(code),
+      country: (row[2]||'').trim(),
+      srName: (row[3]||'').trim(),  srAvg:  (row[9]||'').trim(),
+      midName: (row[10]||'').trim(), midAvg: (row[16]||'').trim(),
+      jrName: (row[17]||'').trim(), jrAvg:  (row[23]||'').trim(),
+      domSafety: (row[24]||'').trim(), domKnow: (row[25]||'').trim(), domGuest: (row[26]||'').trim(),
+      domVehicle: (row[27]||'').trim(), domProf: (row[28]||'').trim(),
+      avg: (row[29]||'').trim(),
+      rating: (row[30]||'').trim(),
+      date: (row[31]||'').trim(),
+      assessor: (row[32]||'').trim(),
+      notes: (row[33]||'').trim(),
+    });
+  }
 
   setStatus('Loading PDP tracker…');
   const pdpRows = await fetchSheetTab(sheetId, 'Guide PDP Tracker');
@@ -1631,8 +1730,8 @@ async function loadLiveData(sheetId) {
   }
   MX_DATA.guides = newMxGuides;
 
-  tasks = newTasks; guides = newGuides; fam = newFam; equip = newEquip; pdp = newPdp; sopRef = newSopRef;
-  setStatus(`Loaded ${newTasks.length} tasks, ${newGuides.length} guides, ${newFam.length} fam trips, ${newEquip.length} equipment items, ${newPdp.length} PDP records, ${newMxGuides.length} matrix guides.`);
+  tasks = newTasks; guides = newGuides; fam = newFam; equip = newEquip; pdp = newPdp; sopRef = newSopRef; baselines = newBaselines;
+  setStatus(`Loaded ${newTasks.length} tasks, ${newGuides.length} guides, ${newFam.length} fam trips, ${newEquip.length} equipment items, ${newPdp.length} PDP records, ${newBaselines.length} property baselines, ${newMxGuides.length} matrix guides.`);
 }
 
 // ── Loads live data automatically on every page open. No manual
@@ -1651,6 +1750,7 @@ async function init(){
 
 function renderAll(){
   renderOnboarding();
+  renderBaselines();
   renderLeaderboard();
   renderPDP();
   renderFamTrips();
@@ -1703,6 +1803,72 @@ function renderSOPRef() {
       <td class="ctr">${s.status?pill(s.status, s.status.includes('Sign')?'complete':s.status.includes('Draft')?'inprogress':'notstarted'):'—'}</td>
       <td>${s.link?`<a href="${s.link}" target="_blank" style="color:var(--gold);font-size:11px">↗ Open</a>`:`<span style="font-size:11px;color:var(--ash)">${s.linkLabel||'—'}</span>`}</td>
     </tr>`).join('') || `<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--ash)">No SOPs match the current filters.</td></tr>`;
+}
+
+// Maps the sheet's free-text Rating (e.g. "Meets Standard") onto the
+// existing pill colour classes, so it looks consistent with every other
+// rating shown elsewhere in the dashboard without inventing new CSS.
+function baselineRatingClass(r){
+  const s=(r||'').toLowerCase();
+  if (s.includes('exceed')) return 'exemplary';
+  if (s.includes('meet')) return 'proficient';
+  if (s.includes('need')) return 'developing';
+  if (s.includes('unsatisf')) return 'poor';
+  return 'pending';
+}
+function guideCell(name, avgStr){
+  if (!name && (avgStr===''||avgStr==null)) return '<span style="color:var(--ash)">—</span>';
+  return `<div>${name?`<strong>${name}</strong>`:'<span style="color:var(--ash)">Unnamed</span>'}<br>${sbar(avgStr)}</div>`;
+}
+
+function renderBaselines() {
+  const ctryF = document.getElementById('bl-ctry').value;
+  const stF   = document.getElementById('bl-status').value;
+  const srch  = (document.getElementById('bl-search').value||'').toLowerCase();
+
+  const done = baselines.filter(b => b.avg && !isNaN(parseFloat(b.avg)));
+  document.getElementById('bl-total').textContent   = PROPS.length;
+  document.getElementById('bl-done').textContent    = done.length;
+  document.getElementById('bl-pending').textContent = PROPS.length - done.length;
+  const avgAll = avg(done.map(b=>b.avg));
+  document.getElementById('bl-avg').textContent = avgAll!==null ? avgAll.toFixed(2) : '—';
+
+  // Show every property (not just ones with a sheet row yet), so pending
+  // properties are visible as a to-do list rather than silently missing.
+  const rows = PROPS.map(p => baselines.find(b => b.prop === p.code) || {
+    prop: p.code, propName: p.name, country: p.country,
+    srName:'', srAvg:'', midName:'', midAvg:'', jrName:'', jrAvg:'',
+    avg:'', rating:'', date:'', assessor:'', notes:'',
+  });
+
+  const filtered = rows.filter(b=>{
+    const isDone = b.avg && !isNaN(parseFloat(b.avg));
+    if (ctryF && b.country!==ctryF) return false;
+    if (stF==='done' && !isDone) return false;
+    if (stF==='pending' && isDone) return false;
+    if (srch) {
+      const hay = `${b.propName} ${b.srName} ${b.midName} ${b.jrName}`.toLowerCase();
+      if (!hay.includes(srch)) return false;
+    }
+    return true;
+  });
+
+  document.getElementById('bl-tbody').innerHTML = filtered.map((b,i)=>{
+    const isDone = b.avg && !isNaN(parseFloat(b.avg));
+    return `
+    <tr class="${i%2?'alt':''}">
+      <td><strong>${b.propName}</strong></td>
+      <td class="ctr">${b.country||'—'}</td>
+      <td>${guideCell(b.srName, b.srAvg)}</td>
+      <td>${guideCell(b.midName, b.midAvg)}</td>
+      <td>${guideCell(b.jrName, b.jrAvg)}</td>
+      <td class="ctr">${sbar(b.avg)}</td>
+      <td class="ctr">${b.rating ? pill(b.rating, baselineRatingClass(b.rating)) : '<span style="color:var(--ash)">—</span>'}</td>
+      <td style="font-size:11px;white-space:nowrap">${b.date||'—'}</td>
+      <td style="font-size:11px">${b.assessor||'—'}</td>
+      <td class="ctr">${isDone ? pill('✅ Complete','complete') : pill('⬜ Pending','notstarted')}</td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="10" style="text-align:center;padding:20px;color:var(--ash)">No properties match the current filters.</td></tr>`;
 }
 
 function renderPDP() {
