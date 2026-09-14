@@ -1620,33 +1620,33 @@ async function loadLiveData(sheetId) {
   console.log(`[EC Guide Tracker] Equipment: parsed ${newEquip.length} items across ${propCols.length} properties.`);
 
   setStatus('Loading property baseline assessments…');
-  // Sheet layout (verified against the raw workbook): several banner/instruction/scoring-key
-  // rows precede the real header row, and gviz only strips one header row automatically — so
-  // rather than guessing how many leading rows to skip, filter on a valid PROPS code in column
-  // B, which only real data rows have. Columns: 0 Property, 1 Code, 2 Country, 3 Sr Guide Name,
-  // 4-8 Sr domains, 9 Sr Overall, 10 Mid Guide Name, 11-15 Mid domains, 16 Mid Overall,
-  // 17 Jr Guide Name, 18-22 Jr domains, 23 Jr Overall, 24-28 Baseline domain avgs
-  // (Safety/Know/Guest/Vehicle/Prof), 29 Baseline Overall Avg, 30 Rating, 31 Assessment Date,
-  // 32 Assessor, 33 Notes.
+  // Sheet layout (re-verified against the raw workbook, 14 Sep 2026): column A on this
+  // tab is a blank spacer column, shifting every real column one to the right of what
+  // the previous mapping assumed. Filter on a valid PROPS code in column C, which only
+  // real data rows have. Columns: 0 (blank spacer), 1 Property, 2 Code, 3 Country,
+  // 4 Sr Guide Name, 5-9 Sr domains, 10 Sr Overall, 11 Mid Guide Name, 12-16 Mid domains,
+  // 17 Mid Overall, 18 Jr Guide Name, 19-23 Jr domains, 24 Jr Overall, 25-29 Baseline
+  // domain avgs (Safety/Know/Guest/Vehicle/Prof), 30 Baseline Overall Avg, 31 Rating,
+  // 32 Assessment Date, 33 Assessor, 34 Notes.
   const blRows = await fetchSheetTab(sheetId, 'Property Baseline Assessment');
   const newBaselines = [];
   for (const row of blRows) {
-    const code = (row[1]||'').trim();
+    const code = (row[2]||'').trim();
     if (!PROPS.find(p => p.code === code)) continue;
     newBaselines.push({
       prop: code,
-      propName: (row[0]||'').trim() || propName(code),
-      country: (row[2]||'').trim(),
-      srName: (row[3]||'').trim(),  srAvg:  (row[9]||'').trim(),
-      midName: (row[10]||'').trim(), midAvg: (row[16]||'').trim(),
-      jrName: (row[17]||'').trim(), jrAvg:  (row[23]||'').trim(),
-      domSafety: (row[24]||'').trim(), domKnow: (row[25]||'').trim(), domGuest: (row[26]||'').trim(),
-      domVehicle: (row[27]||'').trim(), domProf: (row[28]||'').trim(),
-      avg: (row[29]||'').trim(),
-      rating: (row[30]||'').trim(),
-      date: (row[31]||'').trim(),
-      assessor: (row[32]||'').trim(),
-      notes: (row[33]||'').trim(),
+      propName: (row[1]||'').trim() || propName(code),
+      country: (row[3]||'').trim(),
+      srName: (row[4]||'').trim(),  srAvg:  (row[10]||'').trim(),
+      midName: (row[11]||'').trim(), midAvg: (row[17]||'').trim(),
+      jrName: (row[18]||'').trim(), jrAvg:  (row[24]||'').trim(),
+      domSafety: (row[25]||'').trim(), domKnow: (row[26]||'').trim(), domGuest: (row[27]||'').trim(),
+      domVehicle: (row[28]||'').trim(), domProf: (row[29]||'').trim(),
+      avg: (row[30]||'').trim(),
+      rating: (row[31]||'').trim(),
+      date: (row[32]||'').trim(),
+      assessor: (row[33]||'').trim(),
+      notes: (row[34]||'').trim(),
     });
   }
 
