@@ -1719,7 +1719,7 @@ async function loadLiveData(sheetId) {
   for (const row of mxRows) {
     const name = (row[1]||'').trim();
     const prop = (row[2]||'').trim();
-    if (!name || !prop || name === 'Guide Name') continue;
+    if (!name || !prop || name === 'Guide Name' || /^\[.*\]$/.test(name)) continue;
     const role = (row[3]||'').trim();
     const propInfo = PROPS.find(p => p.code === prop) || {};
     const sop_status = {};
