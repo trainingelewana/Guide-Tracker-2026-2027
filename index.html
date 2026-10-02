@@ -1325,7 +1325,8 @@ function renderTraining() {
   const DK=['A','B','C','D','E'];
   let urgent=0,adv=0;
   const guideRows = guides.map((g,i)=>{
-    const ao=parseFloat(g.overall);\n    const a=!isNaN(ao) ? ao : avg([g.A,g.B,g.C,g.D,g.E]);
+    const ao=parseFloat(g.overall);
+    const a=!isNaN(ao) ? ao : avg([g.A,g.B,g.C,g.D,g.E]);
     if(a===null) return null;
     const f27=DK.filter(k=>parseFloat(g[k])<2.5);
     const f28=DK.filter(k=>{const n=parseFloat(g[k]);return n>=2.5&&n<3;});
